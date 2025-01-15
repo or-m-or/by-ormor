@@ -17,7 +17,7 @@
 
 ## 🛠️ Built With
 
-- **Frontend**: [Next.js 15](https://nextjs.org/), [React](https://reactjs.org/), [Tailwind CSS](https://tailwindcss.com/)
+- **Frontend**: [Next.js 15](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/)
 - **Backend**: [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction)
 - **CMS**: [Notion API](https://developers.notion.com/)
 - **Deployment**: [Vercel](https://vercel.com/)

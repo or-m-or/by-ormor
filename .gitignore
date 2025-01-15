@@ -45,7 +45,6 @@ next-env.d.ts
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,nextjs,webstorm
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,visualstudiocode,nextjs,webstorm
-.vscode/
 
 ### macOS ###
 # General
