@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Search, Mail } from 'lucide-react';
+import { Home, Search, Mail, Shield } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -35,6 +35,10 @@ const Navigation = ({ posts = [] }: NavigationProps) => {
                     <Link href="/contact" className="p-3 rounded-xl hover:bg-white/10 transition-all duration-200 group">
                         <Mail className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
                     </Link>
+
+                    <Link href="/login" className="p-3 rounded-xl hover:bg-white/10 transition-all duration-200 group">
+                        <Shield className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+                    </Link>
                 </div>
             </nav>
 
@@ -50,6 +54,10 @@ const Navigation = ({ posts = [] }: NavigationProps) => {
 
                 <Link href="/contact" className="p-3 rounded-xl hover:bg-white/10 transition-all duration-200 group">
                     <Mail className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+                </Link>
+
+                <Link href="/login" className="p-3 rounded-xl hover:bg-white/10 transition-all duration-200 group">
+                    <Shield className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
                 </Link>
             </nav>
         </>

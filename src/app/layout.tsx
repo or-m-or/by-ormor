@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${pretendard.variable} antialiased bg-gray-900 text-gray-100`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

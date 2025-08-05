@@ -8,6 +8,7 @@ Next.js와 Supabase를 기반으로 한 개인 블로그 프로젝트입니다.
 - **스타일링**: Tailwind CSS
 - **데이터베이스**: Supabase (PostgreSQL)
 - **이미지 저장소**: Supabase Storage
+- **인증**: Supabase Authentication
 - **패키지 매니저**: pnpm
 - **폰트**: Pretendard (한글), DungGeunMo (로고용)
 
@@ -20,6 +21,11 @@ Next.js와 Supabase를 기반으로 한 개인 블로그 프로젝트입니다.
 - **카테고리 필터링**: 카테고리별 게시물 필터링
 - **연관 게시물**: 동일 카테고리의 다른 게시물 추천
 - **목차(TOC)**: 게시물 내용의 자동 목차 생성
+
+### 🔐 관리자 기능
+- **관리자 로그인**: Supabase Auth를 통한 이메일/비밀번호 로그인
+- **관리자 대시보드**: 인증된 사용자만 접근 가능한 관리 페이지
+- **세션 관리**: 자동 로그인 상태 유지 및 로그아웃 기능
 
 ### 🎨 UI/UX
 - **다크 테마**: 검은색 배경의 모던한 디자인
@@ -148,7 +154,30 @@ CREATE TRIGGER update_posts_updated_at
 2. RLS 정책 설정 (공개 읽기 허용)
 3. 이미지 파일 업로드
 
-#### 3.3 샘플 데이터 마이그레이션
+#### 3.3 Supabase Authentication 설정
+
+1. **Authentication 활성화**:
+   - Supabase 대시보드 → Authentication → Settings
+   - "Enable email confirmations" 비활성화 (개발용)
+   - "Enable email change confirmations" 비활성화 (개발용)
+   - "Enable phone confirmations" 비활성화 (선택사항)
+
+2. **관리자 계정 생성**:
+   - Supabase 대시보드 → Authentication → Users
+   - "Add user" 클릭
+   - 이메일과 비밀번호 입력 (예: admin@example.com)
+   - "Auto-confirm" 체크하여 즉시 활성화
+
+3. **RLS 정책 설정 (선택사항)**:
+   ```sql
+   -- 인증된 사용자만 posts 테이블에 쓰기 가능하도록 설정
+   DROP POLICY IF EXISTS "Allow public write access" ON posts;
+   
+   CREATE POLICY "Allow authenticated write access" ON posts
+     FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
+   ```
+
+#### 3.4 샘플 데이터 마이그레이션
 
 개발 서버 실행 후 다음 API 호출:
 
@@ -179,6 +208,8 @@ by-ormor/
 │   │   │   ├── contact/       # 연락처 이메일 전송
 │   │   │   └── migrate/       # 샘플 데이터 마이그레이션
 │   │   ├── contact/           # 연락처 페이지
+│   │   ├── dashboard/         # 관리자 대시보드
+│   │   ├── login/             # 관리자 로그인 페이지
 │   │   ├── posts/             # 게시물 상세 페이지
 │   │   ├── search/            # 검색 페이지
 │   │   ├── globals.css        # 전역 스타일
@@ -193,6 +224,8 @@ by-ormor/
 │   │   ├── BlogCard.tsx      # 블로그 카드
 │   │   ├── BlogList.tsx      # 블로그 목록
 │   │   └── Navigation.tsx    # 네비게이션
+│   ├── contexts/             # React Context
+│   │   └── AuthContext.tsx   # 인증 상태 관리
 │   └── lib/                  # 유틸리티 함수
 │       ├── database.ts       # Supabase 데이터베이스 함수
 │       ├── storage.ts        # Supabase Storage 함수
@@ -254,6 +287,31 @@ await createPost(newPost);
 1. `src/components/badge/CategoryBadge.tsx` - 색상 매핑 추가
 2. `src/app/search/page.tsx` - 카테고리 옵션 추가
 
+### 관리자 인증
+
+#### 로그인 방법
+1. 메인 페이지의 "🔐 관리자" 버튼 클릭
+2. Supabase에서 생성한 관리자 계정으로 로그인
+3. 로그인 성공 시 자동으로 대시보드로 이동
+
+#### 새 관리자 계정 생성
+```sql
+-- Supabase SQL Editor에서 실행
+INSERT INTO auth.users (
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  created_at,
+  updated_at
+) VALUES (
+  'newadmin@example.com',
+  crypt('your_password', gen_salt('bf')),
+  now(),
+  now(),
+  now()
+);
+```
+
 ## 🚀 배포
 
 ### Vercel 배포 (권장)
@@ -283,6 +341,11 @@ Vercel 대시보드에서 다음 환경 변수 설정:
 - Supabase 프로젝트가 활성 상태인지 확인
 - RLS 정책이 올바르게 설정되었는지 확인
 
+### 인증 오류
+- Supabase Authentication이 활성화되었는지 확인
+- 관리자 계정이 올바르게 생성되었는지 확인
+- 이메일 확인이 필요하지 않은지 확인
+
 ### 이메일 전송 실패
 - SMTP 설정 확인
 - 네이버 앱 비밀번호 설정 확인
@@ -301,6 +364,8 @@ Vercel 대시보드에서 다음 환경 변수 설정:
 - ✅ 연관 게시물 기능 구현
 - ✅ 이미지 fallback 처리
 - ✅ 에러 처리 개선
+- ✅ Supabase Authentication 구현
+- ✅ 관리자 로그인/대시보드 구현
 
 ### 향후 개선 사항
 - [ ] SEO 최적화
@@ -308,7 +373,11 @@ Vercel 대시보드에서 다음 환경 변수 설정:
 - [ ] 소셜 미디어 공유
 - [ ] 다크/라이트 모드 토글
 - [ ] 게시물 태그 시스템
-- [ ] 관리자 대시보드
+- [ ] 관리자 대시보드 기능 확장
+- [ ] 게시물 편집 기능
+- [ ] 이미지 업로드 기능
+- [🔄] **블로그 설정 페이지** (개발 중 - 기본 UI 완성, 실제 저장 기능 미구현)
+- [🔄] **프로필 관리 페이지** (개발 중 - 기본 UI 완성, 실제 저장 기능 미구현)
 
 ## 📄 라이선스
 
