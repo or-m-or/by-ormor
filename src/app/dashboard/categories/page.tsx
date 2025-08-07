@@ -9,6 +9,7 @@ import { getAllCategories, createCategory, updateCategory, deleteCategory, Categ
 import { ArrowLeft, Plus, Edit, Trash2, Save, X, Tag, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
+import Select from '@/components/common/Select';
 
 export default function CategoriesPage() {
     const { user, loading } = useAuth();
@@ -431,10 +432,22 @@ export default function CategoriesPage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">색상</label>
-                                <select
-                                    value={formData.color}
-                                    onChange={(e) => {
-                                        const color = e.target.value;
+                                <Select
+                                    options={[
+                                        { id: 1, name: 'Red', color: 'text-red-400' },
+                                        { id: 2, name: 'Orange', color: 'text-orange-400' },
+                                        { id: 3, name: 'Yellow', color: 'text-yellow-400' },
+                                        { id: 4, name: 'Green', color: 'text-green-400' },
+                                        { id: 5, name: 'Teal', color: 'text-teal-400' },
+                                        { id: 6, name: 'Blue', color: 'text-blue-400' },
+                                        { id: 7, name: 'Indigo', color: 'text-indigo-400' },
+                                        { id: 8, name: 'Purple', color: 'text-purple-400' },
+                                        { id: 9, name: 'Pink', color: 'text-pink-400' },
+                                        { id: 10, name: 'Gray', color: 'text-gray-400' }
+                                    ]}
+                                    value={formData.color.charAt(0).toUpperCase() + formData.color.slice(1)}
+                                    onChange={(colorName) => {
+                                        const color = colorName.toLowerCase();
                                         const colorMap: Record<string, { bg_color: string, text_color: string }> = {
                                             red: { bg_color: 'bg-gradient-to-r from-red-500/20 to-red-600/20', text_color: 'white' },
                                             orange: { bg_color: 'bg-gradient-to-r from-orange-500/20 to-orange-600/20', text_color: 'white' },
@@ -453,19 +466,9 @@ export default function CategoriesPage() {
                                         handleInputChange('text_color', colorConfig.text_color);
                                         handleInputChange('bg_opacity', '80');
                                     }}
-                                    className="w-full px-3 py-2 bg-gray-700/50 border-0 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm"
-                                >
-                                    <option value="red" className="text-red-400">Red</option>
-                                    <option value="orange" className="text-orange-400">Orange</option>
-                                    <option value="yellow" className="text-yellow-400">Yellow</option>
-                                    <option value="green" className="text-green-400">Green</option>
-                                    <option value="teal" className="text-teal-400">Teal</option>
-                                    <option value="blue" className="text-blue-400">Blue</option>
-                                    <option value="indigo" className="text-indigo-400">Indigo</option>
-                                    <option value="purple" className="text-purple-400">Purple</option>
-                                    <option value="pink" className="text-pink-400">Pink</option>
-                                    <option value="gray" className="text-gray-400">Gray</option>
-                                </select>
+                                    placeholder="색상을 선택하세요"
+                                    className="[&>button]:bg-gray-700/50 [&>button]:border-0 [&>button]:rounded-lg [&>button]:text-white [&>button]:focus:outline-none [&>button]:focus:ring-2 [&>button]:focus:ring-purple-500/50 [&>button]:backdrop-blur-sm [&>button]:text-sm [&>button]:px-3 [&>button]:py-2 [&>button]:shadow-none [&>button]:hover:shadow-none [&>button]:transition-none [&>button]:h-[42px] [&>div]:bg-gray-700/50 [&>div]:border-0 [&>div]:rounded-lg [&>div]:backdrop-blur-sm [&>div]:mt-2 [&>div]:shadow-xl [&>div]:border [&>div]:border-gray-600/30 [&>div]:animate-in [&>div]:fade-in-0 [&>div]:zoom-in-95 [&>div]:duration-200 [&>div]:z-[60] [&_button]:text-sm [&_button]:px-3 [&_button]:py-2.5 [&_button]:rounded-md [&_button]:transition-colors [&_button]:duration-150 [&_button]:hover:bg-gray-600/50 [&_button]:focus:outline-none [&_button]:focus:bg-gray-600/50"
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">정렬 순서</label>

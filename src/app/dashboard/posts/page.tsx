@@ -9,7 +9,7 @@ import { getAllPostsForAdmin, deletePost, togglePostStatus } from '@/lib/databas
 import { Post } from '@/lib/supabase';
 import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
 import { ArrowLeft, Plus, Edit, Trash2, Eye, ChevronLeft, ChevronRight, Power, PowerOff } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Select from '@/components/common/Select';
 import { toast } from 'sonner';
 
 export default function PostsPage() {
@@ -237,17 +237,21 @@ export default function PostsPage() {
                                 <label htmlFor="postsPerPage" className="text-sm font-medium text-gray-300 bg-gray-800/30 px-3 py-1.5 rounded-lg backdrop-blur-sm border-0">
                                     페이지당 게시물
                                 </label>
-                                <Select value={postsPerPage.toString()} onValueChange={(value) => handlePostsPerPageChange(Number(value))}>
-                                    <SelectTrigger className="w-24 px-3 py-2 bg-gray-800/50 border-0 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl">
-                                        <SelectValue placeholder="선택" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-gray-800 border-0 rounded-xl backdrop-blur-sm">
-                                        <SelectItem value="5" className="text-white hover:bg-gray-700 focus:bg-gray-700">5개</SelectItem>
-                                        <SelectItem value="10" className="text-white hover:bg-gray-700 focus:bg-gray-700">10개</SelectItem>
-                                        <SelectItem value="20" className="text-white hover:bg-gray-700 focus:bg-gray-700">20개</SelectItem>
-                                        <SelectItem value="50" className="text-white hover:bg-gray-700 focus:bg-gray-700">50개</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Select
+                                    options={[
+                                        { id: 1, name: '5개' },
+                                        { id: 2, name: '10개' },
+                                        { id: 3, name: '20개' },
+                                        { id: 4, name: '50개' }
+                                    ]}
+                                    value={postsPerPage.toString()}
+                                    onChange={(value) => {
+                                        const numValue = parseInt(value.replace('개', ''));
+                                        handlePostsPerPageChange(numValue);
+                                    }}
+                                    placeholder="선택"
+                                    className="w-28"
+                                />
                             </div>
 
                             {/* 새 게시물 작성 버튼 - 오른쪽 */}

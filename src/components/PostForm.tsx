@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Save, Upload, X, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Save, Upload, X } from 'lucide-react';
 import NovelEditor from '@/components/editor/NovelEditor';
 import { uploadImage, validateImageFile } from '@/lib/storage';
 import { getAllCategories, Category } from '@/lib/categories';
 import { getPostBySlug } from '@/lib/database';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import Select from '@/components/common/Select';
 import type { JSONContent } from 'novel';
 
 interface PostFormData {
@@ -49,7 +49,7 @@ export default function PostForm({
     });
     const [content, setContent] = useState<JSONContent | null>(initialContent || null);
     const [uploadingImage, setUploadingImage] = useState(false);
-    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
 
 
 
@@ -84,23 +84,7 @@ export default function PostForm({
         loadCategories();
     }, []);
 
-    // 드롭다운 외부 클릭 시 닫기
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as Element;
-            if (!target.closest('.category-dropdown')) {
-                setIsCategoryOpen(false);
-            }
-        };
 
-        if (isCategoryOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isCategoryOpen]);
 
     const handleInputChange = (key: string, value: string) => {
         if (key === 'category') {
@@ -366,52 +350,17 @@ export default function PostForm({
                                     </div>
 
                                     {/* 카테고리 */}
-                                    <div className="relative category-dropdown">
-                                        <button
-                                            type="button"
-                                            onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                                            className="w-full text-lg bg-transparent border-none outline-none text-gray-300 focus:outline-none cursor-pointer flex items-center justify-between"
-                                        >
-                                            <span className={formData.category ? 'text-gray-300' : 'text-gray-500'}>
-                                                {formData.category || '카테고리를 선택하세요'}
-                                            </span>
-                                            <ChevronDown
-                                                className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCategoryOpen ? 'rotate-180' : ''
-                                                    }`}
-                                            />
-                                        </button>
-
-                                        {isCategoryOpen && (
-                                            <div className="absolute top-full left-0 right-0 mt-2 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl z-50">
-                                                <ScrollArea className="h-48">
-                                                    <div className="p-2">
-                                                        {loadingCategories ? (
-                                                            <div className="px-3 py-2 text-gray-400 text-sm">카테고리 로딩 중...</div>
-                                                        ) : categories.length === 0 ? (
-                                                            <div className="px-3 py-2 text-gray-400 text-sm">카테고리가 없습니다.</div>
-                                                        ) : (
-                                                            categories.map(category => (
-                                                                <button
-                                                                    key={category.id}
-                                                                    type="button"
-                                                                    onClick={() => {
-                                                                        handleInputChange('category', category.name);
-                                                                        setIsCategoryOpen(false);
-                                                                    }}
-                                                                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors duration-200 ${formData.category === category.name
-                                                                        ? 'bg-purple-600/20 text-purple-300'
-                                                                        : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
-                                                                        }`}
-                                                                >
-                                                                    {category.name}
-                                                                </button>
-                                                            ))
-                                                        )}
-                                                    </div>
-                                                </ScrollArea>
-                                            </div>
-                                        )}
-                                    </div>
+                                    <Select
+                                        options={categories.map(cat => ({
+                                            id: cat.id,
+                                            name: cat.name,
+                                            color: undefined
+                                        }))}
+                                        value={formData.category}
+                                        onChange={(value) => handleInputChange('category', value)}
+                                        placeholder="카테고리를 선택하세요"
+                                        loading={loadingCategories}
+                                    />
                                 </div>
                             </div>
                         </div>

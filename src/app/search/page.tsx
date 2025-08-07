@@ -12,13 +12,7 @@ import { getAllPosts } from '@/lib/database';
 import { Post } from '@/lib/supabase';
 import { getAllCategories, getCategoryPostCount, Category } from '@/lib/categories';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import Select from "@/components/common/Select";
 import { ShootingStars } from '@/components/common/ShootingStars';
 import { StarsBackground } from '@/components/common/StarsBackground';
 
@@ -154,18 +148,23 @@ export default function SearchPage() {
                         {/* 한 페이지에 n개 보기 셀렉트 박스 */}
                         <div className="flex items-center justify-end mb-6 gap-2">
                             <label htmlFor="pageSize" className="text-sm text-gray-300">한 페이지에</label>
-                            <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(Number(value))}>
-                                <SelectTrigger className="w-24 px-3 py-2 bg-gray-800/50 border-0 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl">
-                                    <SelectValue placeholder="선택" />
-                                </SelectTrigger>
-                                <SelectContent className="bg-gray-800 border-0 rounded-xl backdrop-blur-sm w-24 min-w-0">
-                                    {[5, 10, 15, 20, 30, 50].map(n => (
-                                        <SelectItem key={n} value={n.toString()} className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                                            {n}개
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <Select
+                                options={[
+                                    { id: 1, name: '5개' },
+                                    { id: 2, name: '10개' },
+                                    { id: 3, name: '15개' },
+                                    { id: 4, name: '20개' },
+                                    { id: 5, name: '30개' },
+                                    { id: 6, name: '50개' }
+                                ]}
+                                value={pageSize.toString() + '개'}
+                                onChange={(value) => {
+                                    const numValue = parseInt(value.replace('개', ''));
+                                    setPageSize(numValue);
+                                }}
+                                placeholder="선택"
+                                className="w-28"
+                            />
                         </div>
 
                         {/* 검색 결과 */}
