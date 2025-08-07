@@ -3,7 +3,8 @@ import localFont from "next/font/local";
 import "./styles/globals.css";
 import "./styles/prosemirror.css";
 import { AuthProvider } from '@/contexts/AuthContext';
-import { Toaster } from 'sonner';
+import { Toaster } from "@/components/ui/sonner";
+
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -46,13 +47,23 @@ export default function RootLayout({
       >
         <AuthProvider>
           {children}
-          <Toaster
-            position="bottom-right"
-            richColors
-            closeButton
-            duration={3000}
-          />
         </AuthProvider>
+        <Toaster
+          position="bottom-center"
+          closeButton
+          style={{
+            "--normal-border": "none",
+          } as React.CSSProperties}
+          toastOptions={{
+            style: {
+              background: 'rgba(10, 15, 25, 0.99)',
+              color: 'white',
+              border: 'none',
+              backdropFilter: 'blur(12px)',
+              marginBottom: '100px',
+            },
+          }}
+        />
       </body>
     </html>
   );
