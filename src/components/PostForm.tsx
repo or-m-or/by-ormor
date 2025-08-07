@@ -442,15 +442,15 @@ export default function PostForm({
             </div>
 
             {/* 하단 고정 액션 메뉴바 */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl shadow-2xl">
+            <div className="fixed bottom-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-2xl shadow-2xl">
                 <div className="max-w-6xl mx-auto px-6 py-5">
                     <div className="flex items-center justify-between">
                         {/* 왼쪽: 게시물 목록으로 버튼 */}
                         <Link
                             href="/dashboard/posts"
-                            className="flex items-center space-x-2 px-4 py-2.5 text-gray-300 hover:text-white transition-colors duration-200 text-sm font-medium"
+                            className="flex items-center space-x-2 px-4 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 font-medium group"
                         >
-                            <ArrowLeft className="w-4 h-4" />
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
                             <span>게시물 목록으로</span>
                         </Link>
 
@@ -459,7 +459,7 @@ export default function PostForm({
                             {/* 취소 버튼 */}
                             <Link
                                 href="/dashboard/posts"
-                                className="px-5 py-2.5 text-gray-300 hover:text-white transition-colors duration-200 font-medium"
+                                className="px-5 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 font-medium"
                             >
                                 취소
                             </Link>
@@ -468,7 +468,7 @@ export default function PostForm({
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="flex items-center space-x-2 px-6 py-2.5 bg-white/10 hover:bg-white/20 disabled:bg-white/5 text-white rounded-lg transition-all duration-200 font-medium disabled:cursor-not-allowed"
+                                className="flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-xl transition-all duration-300 font-medium disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-indigo-500/20 active:scale-95"
                             >
                                 {saving ? (
                                     <>

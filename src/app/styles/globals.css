@@ -194,6 +194,7 @@ body {
 .prose {
   max-width: none;
   color: #e5e7eb;
+  background-color: transparent !important;
   font-family: var(--font-pretendard), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   border: none !important;
   outline: none !important;

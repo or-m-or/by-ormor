@@ -121,9 +121,9 @@ const NovelEditor = ({
             // markdown 저장 시 에러 처리
             try {
                 window.localStorage.setItem("markdown", editor.storage.markdown.getMarkdown());
-                    } catch {
-            console.warn("Markdown extension not available");
-        }
+            } catch {
+                console.warn("Markdown extension not available");
+            }
         }
 
         setSaveStatus("Saved");
@@ -197,46 +197,51 @@ const NovelEditor = ({
                     }}
                     slotAfter={<ImageResizer />}
                 >
-                    <EditorCommand className="z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-gray-700 bg-gray-800/90 backdrop-blur-sm px-1 py-2 shadow-md transition-all">
-                        <EditorCommandEmpty className="px-2 text-gray-400">No results</EditorCommandEmpty>
-                        <EditorCommandList>
-                            {suggestionItems.map((item) => (
-                                <EditorCommandItem
-                                    value={item.title}
-                                    onCommand={(val) => {
-                                        // command가 존재하는지 확인 후 호출
-                                        if (item.command) {
-                                            item.command(val);
-                                        }
-                                    }}
-                                    className="flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-gray-700/50 aria-selected:bg-purple-600/20 text-gray-300"
-                                    key={item.title}
-                                >
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-600 bg-gray-800">
-                                        {item.icon}
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-400">{item.description}</p>
-                                    </div>
-                                </EditorCommandItem>
-                            ))}
-                        </EditorCommandList>
-                    </EditorCommand>
+                    {/* 슬래시 명령어 (편집 모드에서만) */}
+                    {editable && (
+                        <EditorCommand className="z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-gray-700 bg-gray-800/90 backdrop-blur-sm px-1 py-2 shadow-md transition-all">
+                            <EditorCommandEmpty className="px-2 text-gray-400">No results</EditorCommandEmpty>
+                            <EditorCommandList>
+                                {suggestionItems.map((item) => (
+                                    <EditorCommandItem
+                                        value={item.title}
+                                        onCommand={(val) => {
+                                            // command가 존재하는지 확인 후 호출
+                                            if (item.command) {
+                                                item.command(val);
+                                            }
+                                        }}
+                                        className="flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-gray-700/50 aria-selected:bg-purple-600/20 text-gray-300"
+                                        key={item.title}
+                                    >
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-600 bg-gray-800">
+                                            {item.icon}
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-400">{item.description}</p>
+                                        </div>
+                                    </EditorCommandItem>
+                                ))}
+                            </EditorCommandList>
+                        </EditorCommand>
+                    )}
 
-                    {/* 노션 스타일 Bubble Menu - 텍스트 선택 시에만 나타남 */}
-                    <EditorBubble
-                        className="flex items-center gap-1 p-3 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-600/50"
-                    >
-                        <NodeSelector open={openNode} onOpenChange={setOpenNode} />
-                        <Separator orientation="vertical" className="bg-gray-600/50" />
-                        <LinkSelector open={openLink} onOpenChange={setOpenLink} />
-                        <Separator orientation="vertical" className="bg-gray-600/50" />
-                        <MathSelector />
-                        <Separator orientation="vertical" className="bg-gray-600/50" />
-                        <TextButtons />
-                        <Separator orientation="vertical" className="bg-gray-600/50" />
-                        <ColorSelector open={openColor} onOpenChange={setOpenColor} />
-                    </EditorBubble>
+                    {/* 노션 스타일 Bubble Menu - 텍스트 선택 시에만 나타남 (편집 모드에서만) */}
+                    {editable && (
+                        <EditorBubble
+                            className="flex items-center gap-1 p-3 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-600/50"
+                        >
+                            <NodeSelector open={openNode} onOpenChange={setOpenNode} />
+                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <LinkSelector open={openLink} onOpenChange={setOpenLink} />
+                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <MathSelector />
+                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <TextButtons />
+                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <ColorSelector open={openColor} onOpenChange={setOpenColor} />
+                        </EditorBubble>
+                    )}
                 </EditorContent>
             </EditorRoot>
         </div>
