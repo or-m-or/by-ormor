@@ -1,6 +1,8 @@
 /* ProseMirror 에디터 스타일 - 다크모드 전용 */
 .ProseMirror {
-  @apply p-12 px-8 sm:px-12;
+  padding: 3rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   background-color: #1f2937;
   color: #f9fafb;
   border-radius: 0.5rem;
@@ -469,6 +471,11 @@ div[data-youtube-video] > iframe,
 @media only screen and (max-width: 768px) {
   div[data-youtube-video] > iframe {
     max-width: 100%;
+  }
+  
+  .ProseMirror {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 
