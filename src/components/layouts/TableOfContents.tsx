@@ -2,108 +2,100 @@
 
 import { useState, useEffect } from 'react';
 
+interface TableOfContentsProps {
+    content: any; // Changed from string to any for Novel JSON
+}
+
 interface TocItem {
     id: string;
     text: string;
     level: number;
 }
 
-interface TableOfContentsProps {
-    content: string;
-}
-
-export const TableOfContents = ({ content }: TableOfContentsProps) => {
+export default function TableOfContents({ content }: TableOfContentsProps) {
     const [tocItems, setTocItems] = useState<TocItem[]>([]);
-    const [activeId, setActiveId] = useState<string>('');
-    const [isClient, setIsClient] = useState(false);
 
-    // 클라이언트 사이드에서만 실행
     useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    // HTML 콘텐츠에서 헤딩 태그를 추출하여 목차 생성
-    useEffect(() => {
-        if (!isClient) return;
+        if (!content) return;
 
         try {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(content, 'text/html');
-            const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            // Novel JSON에서 제목 태그들을 직접 추출
+            const extractHeadings = (content: any): TocItem[] => {
+                if (!content || !content.content) return [];
 
-            const items: TocItem[] = Array.from(headings).map((heading, index) => {
-                const level = parseInt(heading.tagName.charAt(1));
-                const text = heading.textContent || '';
-                const id = heading.id || `heading-${index}`;
+                const headings: TocItem[] = [];
+                let index = 0;
 
-                return { id, text, level };
-            });
+                const traverse = (nodes: any[]) => {
+                    nodes.forEach((node) => {
+                        if (node.type === 'heading') {
+                            const level = node.attrs?.level || 1;
+                            const text = node.content?.[0]?.text || '';
+                            // 제목 텍스트를 기반으로 ID 생성 (공백을 하이픈으로 변경)
+                            const id = `heading-${text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
 
+                            headings.push({ id, text, level });
+                        }
+
+                        // 재귀적으로 자식 노드들도 탐색
+                        if (node.content && Array.isArray(node.content)) {
+                            traverse(node.content);
+                        }
+                    });
+                };
+
+                traverse(content.content);
+                return headings;
+            };
+
+            const items = extractHeadings(content);
             setTocItems(items);
         } catch (error) {
-            console.error('목차 생성 중 오류:', error);
+            console.error('TOC generation error:', error);
+            setTocItems([]);
         }
-    }, [content, isClient]);
+    }, [content]);
 
-    // 스크롤 위치에 따라 활성 헤딩 업데이트
-    useEffect(() => {
-        if (!isClient || tocItems.length === 0) return;
-
-        const handleScroll = () => {
-            const scrollTop = window.scrollY;
-            const windowHeight = window.innerHeight;
-
-            // 현재 보이는 헤딩 찾기
-            let activeItem = '';
-            for (let i = tocItems.length - 1; i >= 0; i--) {
-                const element = document.getElementById(tocItems[i].id);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= windowHeight * 0.3) {
-                        activeItem = tocItems[i].id;
-                        break;
-                    }
-                }
-            }
-
-            setActiveId(activeItem);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        handleScroll(); // 초기 실행
-
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [tocItems, isClient]);
-
-    // 목차 클릭 시 해당 헤딩으로 스크롤
-    const scrollToHeading = (id: string) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    if (!isClient || tocItems.length === 0) {
+    if (tocItems.length === 0) {
         return null;
     }
 
+    const scrollToHeading = (id: string) => {
+        const element = document.getElementById(id);
+        if (element) {
+            // 네비게이션 바와 목차를 고려한 오프셋
+            const offset = 100;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     return (
-        <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg p-4 border border-gray-800/50">
-            <nav className="space-y-1">
-                {tocItems.map((item) => (
-                    <button
-                        key={item.id}
-                        onClick={() => scrollToHeading(item.id)}
-                        className={`block w-full text-left px-2 py-1 rounded text-sm transition-colors ${activeId === item.id
-                                ? 'text-purple-400 bg-purple-400/10'
-                                : 'text-gray-400 hover:text-gray-300 hover:bg-gray-800/50'
-                            }`}
-                        style={{ paddingLeft: `${(item.level - 1) * 12 + 8}px` }}
-                    >
-                        {item.text}
-                    </button>
-                ))}
-            </nav>
-        </div>
+        <nav className="sticky top-8">
+            <div className="p-4">
+                <h3 className="text-sm font-medium text-white mb-3 border-b border-gray-700/50 pb-2">목차</h3>
+                <div className="space-y-0.5">
+                    {tocItems.map((item) => (
+                        <button
+                            key={item.id}
+                            onClick={() => scrollToHeading(item.id)}
+                            className={`block w-full text-left px-2 py-1.5 rounded text-sm transition-colors hover:bg-gray-700/20 hover:text-white ${item.level === 1
+                                ? 'font-medium text-white'
+                                : item.level === 2
+                                    ? 'text-gray-300 ml-2'
+                                    : 'text-gray-400 ml-4'
+                                }`}
+                        >
+                            {item.text}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </nav>
     );
-}; 
+} 

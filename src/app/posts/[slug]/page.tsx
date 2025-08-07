@@ -1,36 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import Navigation from '@/components/Navigation';
+import { useParams } from 'next/navigation';
 import { getPostBySlug, getAllPosts } from '@/lib/database';
-import { PostHeader } from '@/components/layouts/PostHeader';
-import { TableOfContents } from '@/components/layouts/TableOfContents';
-import { RelatedPosts } from '@/components/layouts/RelatedPosts';
 import { Post } from '@/lib/supabase';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import { PostHeader } from '@/components/layouts/PostHeader';
+import TableOfContents from '@/components/layouts/TableOfContents';
+import { RelatedPosts } from '@/components/layouts/RelatedPosts';
+import NovelEditor from '@/components/editor/NovelEditor';
 
-export default function PostPage({ params }: { params: Promise<{ slug: string }> }) {
-    const [slug, setSlug] = useState<string>('');
+export default function PostPage() {
+    const params = useParams();
+    const slug = params.slug as string;
     const [post, setPost] = useState<Post | null>(null);
     const [allPosts, setAllPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+
     useEffect(() => {
-        const loadData = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
-                setError(null);
-                
-                // params에서 slug 추출
-                const resolvedParams = await params;
-                const currentSlug = resolvedParams.slug;
-                setSlug(currentSlug);
-
-                // 데이터 로드
                 const [postData, allPostsData] = await Promise.all([
-                    getPostBySlug(currentSlug),
+                    getPostBySlug(slug),
                     getAllPosts()
                 ]);
 
@@ -41,16 +37,18 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
 
                 setPost(postData);
                 setAllPosts(allPostsData);
-            } catch (error) {
-                console.error('데이터 로드 중 오류:', error);
-                setError('데이터를 불러오는 중 오류가 발생했습니다.');
+            } catch (err) {
+                console.error('게시물 로드 중 오류:', err);
+                setError('게시물을 불러오는 중 오류가 발생했습니다.');
             } finally {
                 setLoading(false);
             }
         };
 
-        loadData();
-    }, [params]);
+        if (slug) {
+            fetchData();
+        }
+    }, [slug]);
 
     if (loading) {
         return (
@@ -62,57 +60,82 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
 
     if (error || !post) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center px-4">
-                <div className="text-center max-w-sm">
-                    <h1 className="text-xl sm:text-2xl font-bold text-white mb-4">오류가 발생했습니다</h1>
-                    <p className="text-gray-400 mb-6 text-sm sm:text-base">{error || '게시물을 찾을 수 없습니다.'}</p>
-                    <a 
-                        href="/" 
-                        className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
-                    >
-                        홈으로 돌아가기
-                    </a>
-                </div>
+            <div className="min-h-screen bg-black">
+                <Navigation />
+                <main className="px-3 sm:px-4 md:px-6 py-8">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <h1 className="text-2xl font-bold text-white mb-4">게시물을 찾을 수 없습니다</h1>
+                        <p className="text-gray-400 mb-6">{error || '요청하신 게시물이 존재하지 않습니다.'}</p>
+                        <a
+                            href="/"
+                            className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                        >
+                            홈으로 돌아가기
+                        </a>
+                    </div>
+                </main>
             </div>
         );
     }
 
+
+
+    // 같은 카테고리의 다른 게시물들 (현재 게시물 제외)
+    const relatedPosts = allPosts
+        .filter(p => p.category_id === post.category_id && p.slug !== post.slug)
+        .slice(0, 3);
+
     return (
-        <div className="min-h-screen bg-black relative">
-            {/* 고정된 배경 애니메이션 */}
-            <div className="fixed inset-0 z-0">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-900/20 via-black/20 to-gray-800/20"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05),transparent_50%)]"></div>
-            </div>
-
-            {/* 스크롤되는 내용 */}
-            <div className="relative z-10">
-                <Navigation />
-
-                <main className="md:ml-16 pb-16 md:pb-0 px-3 sm:px-4 md:px-6 pt-12 md:pt-16">
-                    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row justify-center gap-4 lg:gap-6">
-                        {/* 본문 */}
-                        <div className="flex-1 max-w-full lg:max-w-[720px] min-w-0">
+        <div className="flex flex-col min-h-screen bg-black">
+            <Navigation />
+            <main className="flex-1 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 pt-20 sm:pt-24 md:pt-28 lg:pt-8 md:ml-28">
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex flex-col lg:flex-row gap-8 lg:gap-6">
+                        {/* 메인 콘텐츠 영역 */}
+                        <div className="flex-1 lg:max-w-none max-w-4xl lg:max-w-none">
+                            {/* 게시물 헤더 */}
                             <PostHeader post={post} />
 
-                            <article className="prose prose-invert max-w-none prose-sm sm:prose-base">
-                                <div 
-                                    className="text-sm sm:text-base leading-relaxed"
-                                    dangerouslySetInnerHTML={{ __html: post.content }} 
-                                />
+                            {/* 게시물 내용 */}
+                            <article>
+                                {(() => {
+                                    console.log('NovelEditor 렌더링 시작');
+                                    console.log('post.content 타입:', typeof post.content);
+                                    console.log('post.content 값:', post.content);
+                                    let parsedContent = null;
+                                    try {
+                                        parsedContent = typeof post.content === 'string' ? JSON.parse(post.content) : post.content;
+                                        console.log('파싱된 content:', parsedContent);
+                                    } catch (error) {
+                                        console.error('Content parsing error:', error);
+                                    }
+                                    console.log('NovelEditor에 전달할 initialContent:', parsedContent);
+                                    return (
+                                        <NovelEditor
+                                            initialContent={parsedContent}
+                                            editable={false}
+                                            className="text-lg sm:text-xl"
+                                            showToolbar={false}
+                                            showStatus={false}
+                                        />
+                                    );
+                                })()}
                             </article>
 
                             {/* 연관 게시물 */}
-                            <RelatedPosts currentPost={post} allPosts={allPosts} />
+                            {relatedPosts.length > 0 && (
+                                <RelatedPosts currentPost={post} allPosts={allPosts} />
+                            )}
                         </div>
 
-                        {/* TOC 사이드바 */}
-                        <aside className="hidden lg:block w-[240px] shrink-0 self-start sticky top-[100px]">
+                        {/* 목차 - 완전히 분리된 오른쪽 사이드바 */}
+                        <aside className="hidden lg:block lg:w-56 lg:flex-shrink-0 lg:sticky lg:top-24 lg:self-start">
                             <TableOfContents content={post.content} />
                         </aside>
                     </div>
-                </main>
-            </div>
+                </div>
+            </main>
+            <Footer />
         </div>
     );
 } 

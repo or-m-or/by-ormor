@@ -1,0 +1,1274 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-pretendard);
+  --font-dunggeunmo: var(--font-dunggeunmo);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+body {
+  font-family: var(--font-pretendard), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* 폰트 클래스 정의 */
+.font-dunggeunmo {
+  font-family: var(--font-dunggeunmo), monospace;
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --novel-black: #000000;
+  --novel-white: #ffffff;
+  --novel-stone-50: #fafaf9;
+  --novel-stone-100: #f5f5f4;
+  --novel-stone-200: #e7e5e4;
+  --novel-stone-300: #d6d3d1;
+  --novel-stone-400: #a8a29e;
+  --novel-stone-500: #78716c;
+  --novel-stone-600: #57534e;
+  --novel-stone-700: #44403c;
+  --novel-stone-800: #292524;
+  --novel-stone-900: #1c1917;
+  --novel-highlight-default: #ffffff;
+  --novel-highlight-purple: #f6f3f8;
+  --novel-highlight-red: #fdebeb;
+  --novel-highlight-yellow: #fbf4a2;
+  --novel-highlight-blue: #c1ecf9;
+  --novel-highlight-green: #acf79f;
+  --novel-highlight-orange: #faebdd;
+  --novel-highlight-pink: #faf1f5;
+  --novel-highlight-gray: #f1f1ef;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+  --novel-black: #ffffff;
+  --novel-white: #000000;
+  --novel-stone-50: #1c1917;
+  --novel-stone-100: #292524;
+  --novel-stone-200: #44403c;
+  --novel-stone-300: #57534e;
+  --novel-stone-400: #78716c;
+  --novel-stone-500: #a8a29e;
+  --novel-stone-600: #d6d3d1;
+  --novel-stone-700: #e7e5e4;
+  --novel-stone-800: #f5f5f4;
+  --novel-stone-900: #fafaf9;
+  --novel-highlight-default: #000000;
+  --novel-highlight-purple: #3f2c4b;
+  --novel-highlight-red: #5c1a1a;
+  --novel-highlight-yellow: #5c4b1a;
+  --novel-highlight-blue: #1a3d5c;
+  --novel-highlight-green: #1a5c20;
+  --novel-highlight-orange: #5c3a1a;
+  --novel-highlight-pink: #5c1a3a;
+  --novel-highlight-gray: #3a3a3a;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Prose 스타일 개선 - 작은 화면 대응 */
+.prose {
+  max-width: none;
+  color: #e5e7eb;
+  font-family: var(--font-pretendard), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ProseMirror 컨테이너 테두리 제거 */
+.ProseMirror {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 링크 스타일 */
+.prose a {
+  color: #60a5fa;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  color: #93c5fd;
+  border-bottom-color: #93c5fd;
+}
+
+/* 볼드체 스타일 */
+.prose strong {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.02em;
+}
+
+/* 이텔릭체 스타일 */
+.prose em {
+  color: #d1d5db;
+  font-style: italic;
+}
+
+/* 밑줄 스타일 */
+.prose u {
+  color: #e5e7eb;
+  text-decoration: underline;
+  text-decoration-color: #ffffff;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+/* 취소선 스타일 */
+.prose s {
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-color: #ffffff;
+  text-decoration-thickness: 2px;
+}
+
+/* 인라인 코드 컨테이너 스타일 */
+/* 인라인 코드 스타일 - 제거됨 (아래에서 재정의됨) */
+
+/* 공통 하이라이트 스타일 */
+.prose mark,
+.ProseMirror mark {
+  padding: 0.0625rem 0.25rem;
+  border-radius: 0;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* Novel 에디터에서 인라인 코드에 색상 스타일 적용 */
+.ProseMirror code[style*="color"] {
+  color: inherit !important;
+}
+
+/* Novel 에디터에서 인라인 코드 내부 텍스트에 색상 적용 */
+.ProseMirror code span[style*="color"] {
+  color: inherit !important;
+}
+
+/* Novel 에디터에서 인라인 코드에 직접 색상 적용 */
+.ProseMirror code[data-color] {
+  color: var(--data-color) !important;
+}
+
+/* Novel 에디터에서 인라인 코드의 모든 하위 요소에 색상 적용 */
+.ProseMirror code * {
+  color: inherit !important;
+}
+
+/* Novel 에디터에서 인라인 코드에 색상 속성이 있을 때 */
+.ProseMirror code[style*="color"] * {
+  color: inherit !important;
+}
+
+/* 체크박스 스타일 */
+.prose input[type="checkbox"],
+.ProseMirror input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid #6b7280;
+  border-radius: 0.25rem;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+/* 상세 페이지 taskList 스타일 */
+.prose ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose ul[data-type="taskList"] li {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  gap: 0.5rem;
+  margin-bottom: -1rem;
+}
+
+.prose ul[data-type="taskList"] li > label {
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.prose ul[data-type="taskList"] li > div {
+  flex: 1;
+  display: inline;
+}
+
+.prose input[type="checkbox"]:checked,
+.ProseMirror input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.prose input[type="checkbox"]:checked::after,
+.ProseMirror input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.prose input[type="checkbox"]:hover,
+.ProseMirror input[type="checkbox"]:hover {
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.2);
+}
+
+.prose input[type="checkbox"]:checked:hover,
+.ProseMirror input[type="checkbox"]:checked:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+
+
+.prose h1 {
+  color: #f9fafb;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.8;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose h2 {
+  color: #f9fafb;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose h3 {
+  color: #f9fafb;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 0.75rem;
+  margin-bottom: 0.375rem;
+}
+
+.prose p {
+  color: #e5e7eb;
+  font-size: 1.125rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.prose ul, .prose ol {
+  color: #e5e7eb;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.25rem;
+  list-style-position: outside;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  color: #e5e7eb;
+  margin: 0;
+  line-height: 1.6;
+  margin-bottom: -0.25rem;
+}
+
+/* 기본 코드 블럭 스타일 */
+.prose pre {
+  background: #171717 !important;
+  color: #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0 !important;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 기본 pre 태그 스크롤바 스타일링 */
+.prose pre::-webkit-scrollbar {
+  height: 8px;
+  background-color: #1e293b;
+}
+
+.prose pre::-webkit-scrollbar-thumb {
+  background-color: #475569;
+  border-radius: 2px;
+}
+
+.prose pre::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b;
+}
+
+.prose pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  font-family: inherit;
+  display: block;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 모든 코드블럭 관련 요소의 테두리 제거 */
+.ProseMirror pre,
+.prose pre,
+.ProseMirror pre code,
+.prose pre code,
+.ProseMirror pre[data-type="codeBlock"],
+.prose pre[data-type="codeBlock"] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+
+
+
+/* VS Code 다크 테마 스타일 코드 하이라이팅 */
+.ProseMirror .hljs,
+.prose .hljs,
+.ProseMirror pre .hljs,
+.prose pre .hljs {
+  background: #171717 !important;
+  color: #d4d4d4 !important;
+  border-radius: 0.75rem;
+  padding: 0.5rem !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  position: relative !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 라인 넘버가 있는 코드블럭 스타일 */
+pre.code-block-with-lines,
+.ProseMirror pre.code-block-with-lines,
+.prose pre.code-block-with-lines {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  position: relative !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  counter-reset: line !important;
+}
+
+
+
+
+
+/* 코드블럭 스크롤바 스타일링 - 더 두껍고 보기 좋게 */
+pre.code-block-with-lines::-webkit-scrollbar,
+.ProseMirror pre.code-block-with-lines::-webkit-scrollbar,
+.prose pre.code-block-with-lines::-webkit-scrollbar {
+  height: 12px !important;
+  background-color: #1e1e1e !important;
+}
+
+pre.code-block-with-lines::-webkit-scrollbar-thumb,
+.ProseMirror pre.code-block-with-lines::-webkit-scrollbar-thumb,
+.prose pre.code-block-with-lines::-webkit-scrollbar-thumb {
+  background-color: #404040 !important;
+  border-radius: 6px !important;
+  border: 2px solid #1e1e1e !important;
+}
+
+pre.code-block-with-lines::-webkit-scrollbar-thumb:hover,
+.ProseMirror pre.code-block-with-lines::-webkit-scrollbar-thumb:hover,
+.prose pre.code-block-with-lines::-webkit-scrollbar-thumb:hover {
+  background-color: #525252 !important;
+}
+
+
+
+/* 코드블럭 스크롤바 스타일링 */
+.ProseMirror .hljs::-webkit-scrollbar,
+.prose .hljs::-webkit-scrollbar,
+.ProseMirror pre .hljs::-webkit-scrollbar,
+.prose pre .hljs::-webkit-scrollbar {
+  height: 8px !important;
+  background-color: #1e1e1e !important;
+}
+
+.ProseMirror .hljs::-webkit-scrollbar-thumb,
+.prose .hljs::-webkit-scrollbar-thumb,
+.ProseMirror pre .hljs::-webkit-scrollbar-thumb,
+.prose pre .hljs::-webkit-scrollbar-thumb {
+  background-color: #404040 !important;
+  border-radius: 2px !important;
+}
+
+.ProseMirror .hljs::-webkit-scrollbar-thumb:hover,
+.prose .hljs::-webkit-scrollbar-thumb:hover,
+.ProseMirror pre .hljs::-webkit-scrollbar-thumb:hover,
+.prose pre .hljs::-webkit-scrollbar-thumb:hover {
+  background-color: #525252 !important;
+}
+
+/* 코드 블럭 언어 표시 - CodeBlockLowlight 전용 */
+.ProseMirror pre[data-type="codeBlock"]::before,
+.prose pre[data-type="codeBlock"]::before {
+  content: 'Javascript' !important;
+  position: absolute !important;
+  top: 0.5rem !important;
+  right: 0.75rem !important;
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.125rem !important;
+  font-size: 0.625rem !important;
+  font-weight: 600 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  z-index: 10 !important;
+}
+
+/* 언어 표시 - 공통 스타일 */
+.ProseMirror pre.code-block-with-lines code[class*="language-"]::before,
+.prose pre.code-block-with-lines code[class*="language-"]::before {
+  position: absolute !important;
+  top: 0.5rem !important;
+  right: 0.5rem !important;
+  background: transparent !important;
+  color: #d1d5db !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  z-index: 10 !important;
+}
+
+/* 언어별 content 설정 */
+.ProseMirror pre.code-block-with-lines code.language-typescript::before,
+.prose pre.code-block-with-lines code.language-typescript::before {
+  content: 'Typescript' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-python::before,
+.prose pre.code-block-with-lines code.language-python::before {
+  content: 'Python' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-cpp::before,
+.prose pre.code-block-with-lines code.language-cpp::before {
+  content: 'C++' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-c::before,
+.prose pre.code-block-with-lines code.language-c::before {
+  content: 'C' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-csharp::before,
+.prose pre.code-block-with-lines code.language-csharp::before {
+  content: 'C#' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-html::before,
+.prose pre.code-block-with-lines code.language-html::before {
+  content: 'HTML' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-css::before,
+.prose pre.code-block-with-lines code.language-css::before {
+  content: 'CSS' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-scss::before,
+.prose pre.code-block-with-lines code.language-scss::before {
+  content: 'SCSS' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-json::before,
+.prose pre.code-block-with-lines code.language-json::before {
+  content: 'JSON' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-yaml::before,
+.prose pre.code-block-with-lines code.language-yaml::before {
+  content: 'YAML' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-markdown::before,
+.prose pre.code-block-with-lines code.language-markdown::before {
+  content: 'Markdown' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-bash::before,
+.prose pre.code-block-with-lines code.language-bash::before {
+  content: 'Bash' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-shell::before,
+.prose pre.code-block-with-lines code.language-shell::before {
+  content: 'Shell' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-sql::before,
+.prose pre.code-block-with-lines code.language-sql::before {
+  content: 'SQL' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-java::before,
+.prose pre.code-block-with-lines code.language-java::before {
+  content: 'Java' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-ruby::before,
+.prose pre.code-block-with-lines code.language-ruby::before {
+  content: 'Ruby' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-rust::before,
+.prose pre.code-block-with-lines code.language-rust::before {
+  content: 'Rust' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-go::before,
+.prose pre.code-block-with-lines code.language-go::before {
+  content: 'Go' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-php::before,
+.prose pre.code-block-with-lines code.language-php::before {
+  content: 'PHP' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-swift::before,
+.prose pre.code-block-with-lines code.language-swift::before {
+  content: 'Swift' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-kotlin::before,
+.prose pre.code-block-with-lines code.language-kotlin::before {
+  content: 'Kotlin' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-svelte::before,
+.prose pre.code-block-with-lines code.language-svelte::before {
+  content: 'Svelte' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-scala::before,
+.prose pre.code-block-with-lines code.language-scala::before {
+  content: 'Scala' !important;
+}
+
+.ProseMirror pre.code-block-with-lines code.language-dart::before,
+.prose pre.code-block-with-lines code.language-dart::before {
+  content: 'Dart' !important;
+}
+
+/* VS Code 다크 테마 토큰 스타일 */
+.ProseMirror .hljs-keyword {
+  color: #569cd6 !important;
+}
+
+.ProseMirror .hljs-string {
+  color: #ce9178 !important;
+}
+
+.ProseMirror .hljs-comment {
+  color: #6a9955 !important;
+  font-style: italic;
+}
+
+.ProseMirror .hljs-function {
+  color: #dcdcaa !important;
+}
+
+.ProseMirror .hljs-number {
+  color: #b5cea8 !important;
+}
+
+.ProseMirror .hljs-operator {
+  color: #d4d4d4 !important;
+}
+
+.ProseMirror .hljs-punctuation {
+  color: #d4d4d4 !important;
+}
+
+.ProseMirror .hljs-class {
+  color: #4ec9b0 !important;
+}
+
+.ProseMirror .hljs-variable {
+  color: #9cdcfe !important;
+}
+
+.ProseMirror .hljs-params {
+  color: #9cdcfe !important;
+}
+
+.ProseMirror .hljs-property {
+  color: #9cdcfe !important;
+}
+
+.ProseMirror .hljs-title {
+  color: #dcdcaa !important;
+}
+
+.ProseMirror .hljs-built_in {
+  color: #4ec9b0 !important;
+}
+
+.ProseMirror .hljs-literal {
+  color: #569cd6 !important;
+}
+
+.ProseMirror .hljs-type {
+  color: #4ec9b0 !important;
+}
+
+.ProseMirror .hljs-tag {
+  color: #569cd6 !important;
+}
+
+.ProseMirror .hljs-name {
+  color: #569cd6 !important;
+}
+
+.ProseMirror .hljs-attr {
+  color: #9cdcfe !important;
+}
+
+.ProseMirror .hljs-value {
+  color: #ce9178 !important;
+}
+
+/* 추가 VS Code 스타일 */
+.ProseMirror .hljs-regexp {
+  color: #d16969 !important;
+}
+
+.ProseMirror .hljs-symbol {
+  color: #dcdcaa !important;
+}
+
+.ProseMirror .hljs-selector {
+  color: #d7ba7d !important;
+}
+
+.ProseMirror .hljs-attribute {
+  color: #9cdcfe !important;
+}
+
+.ProseMirror .hljs-meta {
+  color: #9cdcfe !important;
+}
+
+.ProseMirror .hljs-deletion {
+  color: #f44747 !important;
+}
+
+.ProseMirror .hljs-addition {
+  color: #6a9955 !important;
+}
+
+
+
+
+
+.prose blockquote {
+  color: #e5e7eb;
+  background: transparent;
+  border-left: 3px solid #ffffff;
+  padding: 0 1.25rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6;
+  position: relative;
+  box-shadow: none;
+}
+
+@media (min-width: 640px) {
+  .prose h1 {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .prose p {
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+
+  .prose ul, .prose ol {
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+}
+
+@media (max-width: 480px) {
+  .prose h1 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .prose h2 {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+
+  .prose h3 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .prose p {
+  font-size: 0.875rem;
+    line-height: 1.625;
+}
+
+  .prose pre {
+  font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+}
+
+/* LaTeX 수식 스타일 */
+.math-display {
+  display: block;
+  text-align: center;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 1rem;
+  border: 1px solid #475569;
+  overflow-x: auto;
+  box-shadow: 
+    0 8px 16px -4px rgba(0, 0, 0, 0.3),
+    0 4px 8px -2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 편집폼용 인라인 수식 스타일 */
+.ProseMirror .math-inline {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 0.5rem;
+  border: 1px solid #475569;
+  color: #f8fafc !important;
+  font-size: 1.05em;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  margin: 0 0.5rem;
+  line-height: 1.4;
+}
+
+.ProseMirror .math-inline {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 0.5rem;
+  border: 1px solid #475569;
+  color: #f8fafc !important;
+  font-size: 1.05em;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  margin: 0 0.5rem;
+  line-height: 1.4;
+}
+
+.ProseMirror .math-inline:hover {
+  background: #1e40af;
+  border-radius: 0;
+}
+
+/* Novel 에디터에서 수식 렌더링을 위한 추가 스타일 */
+.ProseMirror .katex {
+  color: #f8fafc !important;
+  font-size: 1.05em;
+  font-family: 'KaTeX_Main', 'Times New Roman', serif;
+  line-height: 1.2;
+  text-rendering: auto;
+}
+
+.ProseMirror .katex .katex-html {
+  color: #f8fafc !important;
+}
+
+.ProseMirror .katex .katex-mathml {
+  display: none;
+}
+
+.ProseMirror .katex-error {
+  color: #ef4444 !important;
+  background-color: #1f2937;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ef4444;
+  font-family: monospace;
+}
+
+/* Novel 에디터에서 수식 노드가 제대로 렌더링되도록 */
+.ProseMirror .math-inline .katex {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* KaTeX 폰트 및 기호들이 제대로 보이도록 */
+.ProseMirror .katex .katex-html .base {
+  color: #f8fafc !important;
+}
+
+.ProseMirror .katex .katex-html .strut {
+  color: #f8fafc !important;
+}
+
+.ProseMirror .katex .katex-html .mathnormal {
+  color: #f8fafc !important;
+}
+
+.ProseMirror .katex .katex-html .mathit {
+  color: #f8fafc !important;
+}
+
+.ProseMirror .katex .katex-html .mathbf {
+  color: #f8fafc !important;
+}
+
+/* KaTeX 수식 내부 모든 요소에 색상 강제 적용 */
+.ProseMirror .katex * {
+  color: #f8fafc !important;
+}
+
+/* KaTeX 폰트가 제대로 로드되도록 */
+@font-face {
+  font-family: 'KaTeX_Main';
+  src: url('https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/fonts/KaTeX_Main-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'KaTeX_Main';
+  src: url('https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/fonts/KaTeX_Main-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* 상세 페이지 유튜브 비디오 스타일 */
+.prose div[data-youtube-video] {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+.prose div[data-youtube-video] > iframe {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  display: block;
+  pointer-events: auto;
+}
+
+/* 반응형 설정 */
+@media only screen and (max-width: 768px) {
+  .prose div[data-youtube-video] > iframe {
+    max-width: 100%;
+  }
+}
+
+/* 상세페이지용 인라인 수식 스타일 */
+.prose .math-inline {
+  display: inline;
+  background: transparent;
+  border: none;
+  color: #e5e7eb !important;
+  font-size: 1.125rem;
+  font-weight: normal;
+  font-family: inherit;
+  box-shadow: none;
+  text-shadow: none;
+  padding: 0;
+  margin: 0;
+  line-height: inherit;
+}
+
+.math-error {
+  color: #ef4444;
+  background-color: #1f2937;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ef4444;
+  font-family: monospace;
+}
+
+/* 코드블럭 복사 버튼 스타일 */
+.codeblock-copy-wrap {
+  position: relative;
+}
+.codeblock-copy-wrap .copy-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.codeblock-copy-wrap:hover .copy-btn,
+.codeblock-copy-wrap:focus-within .copy-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.codeblock-copy-wrap pre {
+  padding-top: 2.5rem !important;
+  padding-right: 2.5rem !important;
+}
+@media (max-width: 640px) {
+  .codeblock-copy-wrap pre {
+    padding-top: 2rem !important;
+    padding-right: 1.5rem !important;
+  }
+  .codeblock-copy-wrap .copy-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+/* 코드블럭 복사 버튼 - CSS 방식 */
+.ProseMirror pre.code-block-with-lines::after,
+.prose pre.code-block-with-lines::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0.5rem !important;
+  right: 0.5rem !important;
+  background: #374151 !important;
+  color: #d1d5db !important;
+  padding: 0.25rem !important;
+  border-radius: 0.375rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  z-index: 10 !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease-in-out !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23d1d5db' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 16px !important;
+}
+
+.ProseMirror pre.code-block-with-lines:hover::after,
+.prose pre.code-block-with-lines:hover::after {
+  opacity: 1 !important;
+}
+
+/* 복사 버튼 클릭 효과 */
+.ProseMirror pre.code-block-with-lines.copied::after,
+.prose pre.code-block-with-lines.copied::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 10 17 4 11'/%3E%3C/svg%3E") !important;
+  background-color: rgba(5, 150, 105, 0.95) !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 18px !important;
+  box-shadow: 0 2px 8px 0 #0003 !important;
+  border: 1.5px solid #fff2 !important;
+  transition: background 0.2s !important;
+}
+
+/* 코드블럭 안의 코드 스타일 - 인라인 코드와 완전히 분리 */
+.prose pre code,
+.ProseMirror pre code,
+.prose pre.code-block-with-lines code,
+.ProseMirror pre.code-block-with-lines code {
+  background: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  display: block !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* 인라인 코드 스타일 - 코드블럭과 완전히 분리 */
+.prose code:not(pre code),
+.prose p code,
+.prose div code,
+.prose span code,
+.prose li code,
+.prose h1 code,
+.prose h2 code,
+.prose h3 code,
+.prose h4 code,
+.prose h5 code,
+.prose h6 code {
+  color: #d4d4d4 !important;
+  background-color: #2d2d2d !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+  font-weight: 400 !important;
+  border: none !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  line-height: 1.4 !important;
+  display: inline !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+/* ProseMirror 인라인 코드 스타일 - 코드블럭과 완전히 분리 */
+.ProseMirror code:not(pre code),
+.ProseMirror p code,
+.ProseMirror div code,
+.ProseMirror span code,
+.ProseMirror li code,
+.ProseMirror h1 code,
+.ProseMirror h2 code,
+.ProseMirror h3 code,
+.ProseMirror h4 code,
+.ProseMirror h5 code,
+.ProseMirror h6 code {
+  color: #d4d4d4 !important;
+  background-color: #2d2d2d !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+  font-weight: 400 !important;
+  border: none !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  line-height: 1.4 !important;
+  display: inline !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+
+
+

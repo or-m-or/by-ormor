@@ -20,7 +20,7 @@ export default function Home() {
       <div className="relative z-10">
         <Navigation />
 
-        <main className="md:ml-16 pb-16 md:pb-0 p-6">
+        <main className="md:ml-28 pb-16 md:pb-0 p-6">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <header className="mb-8">

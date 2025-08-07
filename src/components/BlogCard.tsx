@@ -2,36 +2,21 @@
 
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
 
 interface BlogCardProps {
-    id: string;
+    slug: string;
     title: string;
     summary: string;
     imageUrl: string;
     publishedDate: string;
     readTime: string;
-    category: string;
+    category?: string;
 }
 
-const getCategoryColor = (category: string) => {
-    const colorMap: Record<string, { bg: string; text: string }> = {
-        '개발': { bg: 'bg-blue-500/20', text: 'text-blue-400' },
-        '기술': { bg: 'bg-green-500/20', text: 'text-green-400' },
-        '일상': { bg: 'bg-purple-500/20', text: 'text-purple-400' },
-        '리뷰': { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
-        '튜토리얼': { bg: 'bg-pink-500/20', text: 'text-pink-400' },
-        '프로젝트': { bg: 'bg-indigo-500/20', text: 'text-indigo-400' },
-        '회고': { bg: 'bg-red-500/20', text: 'text-red-400' },
-        '팁': { bg: 'bg-teal-500/20', text: 'text-teal-400' },
-        '소개': { bg: 'bg-orange-500/20', text: 'text-orange-400' },
-        '경험': { bg: 'bg-cyan-500/20', text: 'text-cyan-400' }
-    };
-
-    return colorMap[category] || { bg: 'bg-gray-500/20', text: 'text-gray-400' };
-};
-
 const BlogCard = ({
-    id,
+    slug,
     title,
     summary,
     imageUrl,
@@ -39,10 +24,18 @@ const BlogCard = ({
     readTime,
     category
 }: BlogCardProps) => {
-    const categoryColor = getCategoryColor(category);
+    const [categoryStyle, setCategoryStyle] = useState<CategoryStyle>({ bg: 'bg-gray-600/80', text: 'text-gray-100' });
+
+    useEffect(() => {
+        const loadCategoryStyle = async () => {
+            const style = await getCategoryStyleByName(category || '');
+            setCategoryStyle(style);
+        };
+        loadCategoryStyle();
+    }, [category]);
 
     return (
-        <Link href={`/posts/${id}`}>
+        <Link href={`/posts/${slug}`}>
             <article className="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg transition-all hover:bg-zinc-800/50 hover:shadow-lg hover:shadow-gray-900/50">
                 {/* Featured Image */}
                 <div className="relative mb-4 aspect-video overflow-hidden rounded-lg bg-gray-800">
@@ -53,28 +46,26 @@ const BlogCard = ({
                                 alt={title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 onError={(e) => {
-                                    // 이미지 로드 실패시 기본 이모지 표시
+                                    // 이미지 로드 실패시 기본 이미지로 변경
                                     const target = e.target as HTMLImageElement;
-                                    target.style.display = 'none';
-                                    const fallback = target.parentElement?.querySelector('.fallback') as HTMLElement;
-                                    if (fallback) fallback.style.display = 'flex';
+                                    target.src = '/images/default-thumbnail.jpg';
                                 }}
                             />
-                            <div className="fallback absolute inset-0 flex items-center justify-center" style={{ display: 'none' }}>
-                                <div className="text-white text-4xl font-bold">📝</div>
-                            </div>
+
                         </>
                     ) : (
-                        // 이미지가 없는 경우 기본 이모지 표시
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-white text-4xl font-bold">📝</div>
-                        </div>
+                        // 이미지가 없는 경우 기본 이미지 표시
+                        <img
+                            src="/images/default-thumbnail.jpg"
+                            alt={title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
                     )}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
 
                     {/* Category Badge */}
                     <div className="absolute top-3 left-3">
-                        <div className={`rounded-full ${categoryColor.bg} px-3 py-1 text-xs font-medium ${categoryColor.text} backdrop-blur-sm`}>
+                        <div className={`rounded-full ${categoryStyle.bg} px-3 py-1.5 text-xs font-medium ${categoryStyle.text} backdrop-blur-md border-0 shadow-lg shadow-black/30 hover:shadow-xl hover:shadow-black/40 transition-all duration-200`}>
                             {category}
                         </div>
                     </div>

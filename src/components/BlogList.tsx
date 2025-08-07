@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import BlogCard from './BlogCard';
 import { getAllPosts } from '@/lib/database';
 import { Post } from '@/lib/supabase';
+import { Category } from '@/lib/categories';
 
 const BlogList = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<(Post & { category: Category })[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
@@ -59,7 +60,7 @@ const BlogList = () => {
         {posts.map((post) => (
           <BlogCard
             key={post.id}
-            id={post.id}
+            slug={post.slug}
             title={post.title}
             summary={post.description}
             imageUrl={post.thumbnail}
@@ -69,7 +70,7 @@ const BlogList = () => {
               day: 'numeric',
             })}
             readTime="5 min read"
-            category={post.category}
+            category={post.category?.name || ''}
           />
         ))}
       </div>

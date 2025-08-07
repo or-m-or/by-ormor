@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { CategoryBadge } from '@/components/badge/CategoryBadge';
+import { useState, useEffect } from 'react';
+import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
 import { Post } from '@/lib/supabase';
 
 interface RelatedPostsProps {
@@ -15,7 +16,7 @@ export const RelatedPosts = ({ currentPost, allPosts }: RelatedPostsProps) => {
     const relatedPosts = allPosts
         .filter(post =>
             post.id !== currentPost.id &&
-            post.category === currentPost.category
+            post.category_id === currentPost.category_id
         )
         .slice(0, 3); // 최대 3개만 표시
 
@@ -25,11 +26,20 @@ export const RelatedPosts = ({ currentPost, allPosts }: RelatedPostsProps) => {
 
     return (
         <section className="mt-12 sm:mt-16 mb-16 sm:mb-24">
+            {/* 구분선 */}
+            <div className="border-t border-gray-700/50 mb-8"></div>
+
+            {/* 제목 */}
+            <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white">연관 게시물</h2>
+                <p className="text-gray-400 text-sm mt-2">같은 카테고리의 다른 게시물을 확인해보세요</p>
+            </div>
+
             <div className="pt-6 sm:pt-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {relatedPosts.map((post) => {
                         // 썸네일 이미지 처리 (Supabase Storage URL 또는 fallback)
-                        const imageUrl = post.thumbnail.startsWith('http') ? post.thumbnail : '/api/placeholder/400/225';
+                        const imageUrl = post.thumbnail && post.thumbnail.startsWith('http') ? post.thumbnail : '/images/default-thumbnail.jpg';
 
                         return (
                             <Link
@@ -48,21 +58,19 @@ export const RelatedPosts = ({ currentPost, allPosts }: RelatedPostsProps) => {
                                             onError={(e) => {
                                                 // 이미지 로드 실패 시 fallback
                                                 const target = e.target as HTMLImageElement;
-                                                target.src = '/api/placeholder/400/225';
+                                                target.src = '/images/default-thumbnail.jpg';
                                             }}
                                         />
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
+
+                                        {/* 카테고리 뱃지 - 이미지 위에 배치 */}
+                                        <div className="absolute top-3 left-3">
+                                            <RelatedPostCategoryBadge category={post.category?.name ?? 'ETC'} />
+                                        </div>
                                     </div>
 
                                     {/* 내용 */}
                                     <div className="p-3 sm:p-4">
-                                        {/* 카테고리 뱃지 */}
-                                        <div className="mb-2 sm:mb-3">
-                                            <CategoryBadge
-                                                category={post.category}
-                                                className="text-xs px-2 py-1"
-                                            />
-                                        </div>
-
                                         <h3 className="text-white font-semibold text-base sm:text-lg mb-2 line-clamp-2 group-hover:text-purple-400 transition-colors">
                                             {post.title}
                                         </h3>
@@ -87,5 +95,24 @@ export const RelatedPosts = ({ currentPost, allPosts }: RelatedPostsProps) => {
                 </div>
             </div>
         </section>
+    );
+};
+
+// 연관 게시물용 카테고리 뱃지 컴포넌트
+const RelatedPostCategoryBadge = ({ category }: { category: string }) => {
+    const [categoryStyle, setCategoryStyle] = useState<CategoryStyle>({ bg: 'bg-gray-600/80', text: 'text-gray-100' });
+
+    useEffect(() => {
+        const loadCategoryStyle = async () => {
+            const style = await getCategoryStyleByName(category);
+            setCategoryStyle(style);
+        };
+        loadCategoryStyle();
+    }, [category]);
+
+    return (
+        <div className={`rounded-full ${categoryStyle.bg} px-3 py-1.5 text-xs font-medium ${categoryStyle.text} backdrop-blur-md border border-white/30 shadow-lg shadow-black/30 hover:shadow-xl hover:shadow-black/40 transition-all duration-200`}>
+            {category}
+        </div>
     );
 }; 

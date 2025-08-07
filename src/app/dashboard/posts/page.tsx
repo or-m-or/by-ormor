@@ -7,7 +7,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPosts, deletePost } from '@/lib/database';
 import { Post } from '@/lib/supabase';
+import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
 import { ArrowLeft, Plus, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function PostsPage() {
     const { user, loading } = useAuth();
@@ -15,6 +17,7 @@ export default function PostsPage() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [categoryStyles, setCategoryStyles] = useState<Record<string, CategoryStyle>>({});
 
     // 페이지네이션 상태
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,6 +56,25 @@ export default function PostsPage() {
             setCurrentPage(1);
         }
     }, [posts.length, postsPerPage, currentPage]);
+
+    // 카테고리 스타일 로드
+    useEffect(() => {
+        const loadCategoryStyles = async () => {
+            const styles: Record<string, CategoryStyle> = {};
+            const uniqueCategories = [...new Set(posts.map(post => post.category?.name || 'ETC'))];
+
+            for (const categoryName of uniqueCategories) {
+                const style = await getCategoryStyleByName(categoryName);
+                styles[categoryName] = style;
+            }
+
+            setCategoryStyles(styles);
+        };
+
+        if (posts.length > 0) {
+            loadCategoryStyles();
+        }
+    }, [posts]);
 
     // 현재 페이지의 게시물들
     const getCurrentPosts = () => {
@@ -116,7 +138,7 @@ export default function PostsPage() {
 
             {/* 스크롤되는 내용 */}
             <div className="relative z-10">
-                <main className="p-6">
+                <main className="p-6 pb-32">
                     <div className="max-w-7xl mx-auto">
                         {/* 헤더 */}
                         <header className="mb-8">
@@ -134,7 +156,7 @@ export default function PostsPage() {
 
                                 <Link
                                     href="/dashboard"
-                                    className="flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
+                                    className="flex items-center space-x-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/70 text-white rounded-xl transition-all duration-300 text-sm backdrop-blur-sm shadow-lg hover:shadow-xl"
                                 >
                                     <ArrowLeft className="w-4 h-4" />
                                     <span>대시보드로</span>
@@ -148,66 +170,56 @@ export default function PostsPage() {
 
                         {/* 통계 정보 */}
                         <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-4">
-                                <div className="text-2xl font-bold text-white">{posts.length}</div>
+                            <div className="bg-gray-800/20 rounded-xl border-0 p-6 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                                <div className="text-3xl font-bold text-white mb-1">{posts.length}</div>
                                 <div className="text-gray-400 text-sm">총 게시물</div>
                             </div>
-                            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-4">
-                                <div className="text-2xl font-bold text-white">
-                                    {new Set(posts.map(post => post.category)).size}
+                            <div className="bg-gray-800/20 rounded-xl border-0 p-6 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                                <div className="text-3xl font-bold text-white mb-1">
+                                    {new Set(posts.map(post => post.category?.name || 'ETC')).size}
                                 </div>
                                 <div className="text-gray-400 text-sm">카테고리</div>
                             </div>
-                            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-4">
-                                <div className="text-2xl font-bold text-white">
+                            <div className="bg-gray-800/20 rounded-xl border-0 p-6 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                                <div className="text-3xl font-bold text-white mb-1">
                                     {posts.filter(post => post.updated_at && post.updated_at !== post.created_at).length}
                                 </div>
                                 <div className="text-gray-400 text-sm">수정된 게시물</div>
                             </div>
                         </div>
 
-                        {/* 새 게시물 작성 버튼 */}
-                        <div className="mb-4 flex justify-end">
+                        {/* 표 상단 컨트롤 */}
+                        <div className="mb-4 flex items-center justify-between">
+                            {/* 페이지당 게시물 수 선택 - 왼쪽 */}
+                            <div className="flex items-center space-x-3">
+                                <label htmlFor="postsPerPage" className="text-sm font-medium text-gray-300 bg-gray-800/30 px-3 py-1.5 rounded-lg backdrop-blur-sm border-0">
+                                    페이지당 게시물
+                                </label>
+                                <Select value={postsPerPage.toString()} onValueChange={(value) => handlePostsPerPageChange(Number(value))}>
+                                    <SelectTrigger className="w-24 px-3 py-2 bg-gray-800/50 border-0 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl">
+                                        <SelectValue placeholder="선택" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-gray-800 border-0 rounded-xl backdrop-blur-sm">
+                                        <SelectItem value="5" className="text-white hover:bg-gray-700 focus:bg-gray-700">5개</SelectItem>
+                                        <SelectItem value="10" className="text-white hover:bg-gray-700 focus:bg-gray-700">10개</SelectItem>
+                                        <SelectItem value="20" className="text-white hover:bg-gray-700 focus:bg-gray-700">20개</SelectItem>
+                                        <SelectItem value="50" className="text-white hover:bg-gray-700 focus:bg-gray-700">50개</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* 새 게시물 작성 버튼 - 오른쪽 */}
                             <Link
                                 href="/dashboard/posts/new"
-                                className="flex items-center space-x-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm"
+                                className="flex items-center space-x-2 px-4 py-2 bg-green-600/90 hover:bg-green-600 text-white rounded-xl transition-all duration-300 text-sm shadow-lg hover:shadow-xl hover:shadow-green-500/30 backdrop-blur-sm"
                             >
-                                <Plus className="w-3.5 h-3.5" />
+                                <Plus className="w-4 h-4" />
                                 <span>새 게시물 작성</span>
                             </Link>
                         </div>
 
-                        {/* 페이지당 게시물 수 선택 */}
-                        <div className="mb-4 flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                                <label htmlFor="postsPerPage" className="text-sm text-gray-300">
-                                    페이지당 게시물:
-                                </label>
-                                <select
-                                    id="postsPerPage"
-                                    value={postsPerPage}
-                                    onChange={(e) => handlePostsPerPageChange(Number(e.target.value))}
-                                    className="px-2 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                >
-                                    <option value={5}>5개</option>
-                                    <option value={10}>10개</option>
-                                    <option value={20}>20개</option>
-                                    <option value={50}>50개</option>
-                                </select>
-                            </div>
-                            <div className="text-sm text-gray-400">
-                                {posts.length > 0 ? (
-                                    <>
-                                        {((currentPage - 1) * postsPerPage) + 1} - {Math.min(currentPage * postsPerPage, posts.length)} / {posts.length}개
-                                    </>
-                                ) : (
-                                    '0개'
-                                )}
-                            </div>
-                        </div>
-
                         {/* 게시물 목록 테이블 */}
-                        <div className="bg-gray-800/30 rounded-lg border border-gray-700 overflow-hidden">
+                        <div className="bg-gray-800/20 rounded-xl border-0 overflow-hidden backdrop-blur-sm shadow-lg">
                             {loadingPosts ? (
                                 <div className="p-8 text-center">
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400 mx-auto mb-4"></div>
@@ -218,7 +230,7 @@ export default function PostsPage() {
                                     <p className="text-gray-400 mb-4">등록된 게시물이 없습니다.</p>
                                     <Link
                                         href="/dashboard/posts/new"
-                                        className="inline-flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                                        className="inline-flex items-center space-x-2 px-4 py-2 bg-green-600/90 hover:bg-green-600 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-green-500/30 backdrop-blur-sm"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span>첫 게시물 작성하기</span>
@@ -228,7 +240,7 @@ export default function PostsPage() {
                                 <>
                                     <div className="overflow-x-auto">
                                         <table className="w-full">
-                                            <thead className="bg-gray-700/50">
+                                            <thead className="bg-gray-700/30">
                                                 <tr>
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                         제목
@@ -252,7 +264,7 @@ export default function PostsPage() {
                                             </thead>
                                             <tbody className="divide-y divide-gray-700">
                                                 {currentPosts.map((post) => (
-                                                    <tr key={post.id} className="hover:bg-gray-700/30 transition-colors">
+                                                    <tr key={post.id} className="hover:bg-gray-700/20 transition-all duration-300">
                                                         <td className="px-6 py-4 whitespace-nowrap">
                                                             <div className="max-w-xs">
                                                                 <div className="text-sm font-medium text-white truncate">
@@ -264,8 +276,8 @@ export default function PostsPage() {
                                                             </div>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-900/50 text-purple-300">
-                                                                {post.category}
+                                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${categoryStyles[post.category?.name || 'ETC']?.bg || 'bg-purple-900/50'} ${categoryStyles[post.category?.name || 'ETC']?.text || 'text-purple-300'}`}>
+                                                                {post.category?.name || 'ETC'}
                                                             </span>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
@@ -278,32 +290,32 @@ export default function PostsPage() {
                                                             {post.slug}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            <div className="flex items-center justify-end space-x-2">
+                                                            <div className="flex items-center justify-end space-x-1">
                                                                 <Link
                                                                     href={`/posts/${post.slug}`}
                                                                     target="_blank"
-                                                                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                                                                    className="p-2.5 text-blue-400 hover:text-blue-300 hover:bg-blue-500/15 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-blue-500/20 backdrop-blur-sm"
                                                                     title="보기"
                                                                 >
-                                                                    <Eye className="w-4 h-4" />
+                                                                    <Eye className="w-5 h-5" />
                                                                 </Link>
                                                                 <Link
                                                                     href={`/dashboard/posts/edit/${post.slug}`}
-                                                                    className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                                                                    className="p-2.5 text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/15 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-yellow-500/20 backdrop-blur-sm"
                                                                     title="수정"
                                                                 >
-                                                                    <Edit className="w-4 h-4" />
+                                                                    <Edit className="w-5 h-5" />
                                                                 </Link>
                                                                 <button
                                                                     onClick={() => handleDelete(post.id)}
                                                                     disabled={deletingId === post.id}
-                                                                    className="text-red-400 hover:text-red-300 disabled:text-red-600 transition-colors"
+                                                                    className="p-2.5 text-red-400 hover:text-red-300 hover:bg-red-500/15 disabled:text-red-600 disabled:bg-red-500/5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-red-500/20 backdrop-blur-sm"
                                                                     title="삭제"
                                                                 >
                                                                     {deletingId === post.id ? (
-                                                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-400"></div>
+                                                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-400"></div>
                                                                     ) : (
-                                                                        <Trash2 className="w-4 h-4" />
+                                                                        <Trash2 className="w-5 h-5" />
                                                                     )}
                                                                 </button>
                                                             </div>
@@ -316,62 +328,49 @@ export default function PostsPage() {
 
                                     {/* 페이지네이션 */}
                                     {totalPages > 1 && (
-                                        <div className="px-6 py-4 bg-gray-700/30 border-t border-gray-700">
-                                            <div className="flex items-center justify-between">
-                                                <div className="text-sm text-gray-400">
-                                                    페이지 {currentPage} / {totalPages}
+                                        <div className="flex justify-between items-center mt-6 mb-6 px-6 py-4 select-none">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="bg-gray-800/30 px-3 py-1.5 rounded-lg backdrop-blur-sm border-0">
+                                                    <span className="text-sm text-gray-300">
+                                                        {posts.length > 0 ? (
+                                                            <>
+                                                                {((currentPage - 1) * postsPerPage) + 1} - {Math.min(currentPage * postsPerPage, posts.length)} / {posts.length}개
+                                                            </>
+                                                        ) : (
+                                                            '0개'
+                                                        )}
+                                                    </span>
                                                 </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <button
-                                                        onClick={() => handlePageChange(currentPage - 1)}
-                                                        disabled={currentPage === 1}
-                                                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded transition-colors disabled:cursor-not-allowed"
-                                                    >
-                                                        <ChevronLeft className="w-4 h-4" />
-                                                    </button>
-
-                                                    {/* 페이지 번호들 */}
-                                                    <div className="flex items-center space-x-1">
-                                                        {Array.from({ length: totalPages }, (_, i) => i + 1)
-                                                            .filter(page => {
-                                                                // 현재 페이지 주변 2페이지씩만 표시
-                                                                return page === 1 ||
-                                                                    page === totalPages ||
-                                                                    (page >= currentPage - 2 && page <= currentPage + 2);
-                                                            })
-                                                            .map((page, index, array) => {
-                                                                // 생략 표시 추가
-                                                                if (index > 0 && page - array[index - 1] > 1) {
-                                                                    return (
-                                                                        <span key={`ellipsis-${page}`} className="px-2 text-gray-400">
-                                                                            ...
-                                                                        </span>
-                                                                    );
-                                                                }
-
-                                                                return (
-                                                                    <button
-                                                                        key={page}
-                                                                        onClick={() => handlePageChange(page)}
-                                                                        className={`px-3 py-1 rounded transition-colors ${currentPage === page
-                                                                            ? 'bg-purple-600 text-white'
-                                                                            : 'bg-gray-600 hover:bg-gray-500 text-white'
-                                                                            }`}
-                                                                    >
-                                                                        {page}
-                                                                    </button>
-                                                                );
-                                                            })}
-                                                    </div>
-
-                                                    <button
-                                                        onClick={() => handlePageChange(currentPage + 1)}
-                                                        disabled={currentPage === totalPages}
-                                                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded transition-colors disabled:cursor-not-allowed"
-                                                    >
-                                                        <ChevronRight className="w-4 h-4" />
-                                                    </button>
+                                                <div className="bg-gray-800/30 px-3 py-1.5 rounded-lg backdrop-blur-sm border-0">
+                                                    <span className="text-sm text-gray-300">
+                                                        페이지 {currentPage} / {totalPages}
+                                                    </span>
                                                 </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => handlePageChange(currentPage - 1)}
+                                                    disabled={currentPage === 1}
+                                                    className="p-2 rounded-full hover:bg-gray-700/40 disabled:opacity-40 transition-all duration-200"
+                                                >
+                                                    <ChevronLeft className="w-5 h-5 text-gray-400" />
+                                                </button>
+                                                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                                                    <button
+                                                        key={p}
+                                                        onClick={() => handlePageChange(p)}
+                                                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${p === currentPage ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' : 'bg-gray-700/40 text-gray-200 hover:bg-purple-700/60 hover:shadow-md'}`}
+                                                    >
+                                                        {p}
+                                                    </button>
+                                                ))}
+                                                <button
+                                                    onClick={() => handlePageChange(currentPage + 1)}
+                                                    disabled={currentPage === totalPages}
+                                                    className="p-2 rounded-full hover:bg-gray-700/40 disabled:opacity-40 transition-all duration-200"
+                                                >
+                                                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                                                </button>
                                             </div>
                                         </div>
                                     )}

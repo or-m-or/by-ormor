@@ -56,8 +56,8 @@ export const ContactForm = () => {
       <input
         type='email'
         name='email'
-        placeholder='Enter Your Email'
-        className='w-full rounded-md border border-zinc-700 bg-zinc-800 p-3 text-white'
+        placeholder='수신할 이메일을 입력해주세요'
+        className='w-full rounded-xl border-0 bg-gray-800/50 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl'
         onChange={handleChange}
         value={formData.email}
         required
@@ -66,8 +66,8 @@ export const ContactForm = () => {
       <input
         type='text'
         name='name'
-        placeholder='Name'
-        className='w-full rounded-md border border-zinc-700 bg-zinc-800 p-3 text-white'
+        placeholder='이름을 입력해주세요'
+        className='w-full rounded-xl border-0 bg-gray-800/50 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl'
         onChange={handleChange}
         value={formData.name}
         required
@@ -76,8 +76,8 @@ export const ContactForm = () => {
 
       <textarea
         name='message'
-        placeholder='Your Message'
-        className='h-40 w-full resize-none rounded-md border border-zinc-700 bg-zinc-800 p-3 text-white'
+        placeholder='메시지를 입력해주세요'
+        className='h-40 w-full resize-none rounded-xl border-0 bg-gray-800/50 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl'
         onChange={handleChange}
         value={formData.message}
         required

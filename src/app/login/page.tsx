@@ -71,7 +71,7 @@ export default function LoginPage() {
                         </div>
 
                         {/* 로그인 폼 */}
-                        <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-6">
+                        <div className="bg-gray-800/20 rounded-xl border-0 p-8 backdrop-blur-sm shadow-lg">
                             <form onSubmit={handleLogin} className="space-y-4">
                                 {/* 이메일 입력 */}
                                 <div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 bg-gray-800/50 border-0 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl"
                                         placeholder="admin@example.com"
                                     />
                                 </div>
@@ -100,14 +100,14 @@ export default function LoginPage() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 bg-gray-800/50 border-0 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl"
                                         placeholder="••••••••"
                                     />
                                 </div>
 
                                 {/* 에러 메시지 */}
                                 {error && (
-                                    <div className="text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg p-3">
+                                    <div className="text-red-400 text-sm bg-red-900/20 border-0 rounded-xl p-4 backdrop-blur-sm">
                                         {error}
                                     </div>
                                 )}
@@ -116,7 +116,7 @@ export default function LoginPage() {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
+                                    className="w-full bg-purple-600/90 hover:bg-purple-600 disabled:bg-purple-800 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-purple-500/30 backdrop-blur-sm"
                                 >
                                     {loading ? (
                                         <div className="flex items-center justify-center">
@@ -130,12 +130,13 @@ export default function LoginPage() {
                             </form>
 
                             {/* 홈으로 돌아가기 */}
-                            <div className="mt-6 text-center">
+                            <div className="mt-8 text-center">
                                 <Link
                                     href="/"
-                                    className="text-gray-400 hover:text-white text-sm transition-colors"
+                                    className="inline-flex items-center space-x-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/70 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm text-sm"
                                 >
-                                    ← 홈으로 돌아가기
+                                    <span>←</span>
+                                    <span>홈으로 돌아가기</span>
                                 </Link>
                             </div>
                         </div>

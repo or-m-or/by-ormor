@@ -1,0 +1,483 @@
+/* ProseMirror 에디터 스타일 - 다크모드 전용 */
+.ProseMirror {
+  @apply p-12 px-8 sm:px-12;
+  background-color: #1f2937;
+  color: #f9fafb;
+  border-radius: 0.5rem;
+  border: none;
+  font-family: var(--font-pretendard), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* 편집폼 텍스트 스타일 - 상세 페이지와 동일하게 */
+.ProseMirror h1 {
+  color: #f9fafb;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.8;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ProseMirror h2 {
+  color: #f9fafb;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ProseMirror h3 {
+  color: #f9fafb;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 0.75rem;
+  margin-bottom: 0.375rem;
+}
+
+.ProseMirror p {
+  color: #e5e7eb;
+  font-size: 1.125rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.ProseMirror ul, .ProseMirror ol {
+  color: #e5e7eb;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.25rem;
+  list-style-position: outside;
+}
+
+.ProseMirror li {
+  color: #e5e7eb;
+  margin: 0;
+  line-height: 1.6;
+  margin-bottom: -0.25rem;
+}
+
+.ProseMirror .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Custom image styles */
+.ProseMirror img {
+  transition: filter 0.1s ease-in-out;
+}
+
+.ProseMirror img:hover {
+  cursor: pointer;
+  filter: brightness(90%);
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  filter: brightness(90%);
+  outline: 3px solid #5abbf7;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.img-placeholder {
+  position: relative;
+}
+
+.img-placeholder:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid var(--novel-stone-200);
+  border-top-color: var(--novel-stone-800);
+  animation: spinning 0.6s linear infinite;
+}
+
+@keyframes spinning {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom TODO list checkboxes */
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  gap: 0.5rem;
+  margin-bottom: -1rem;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label {
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1;
+  display: inline;
+}
+
+.ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  margin: 0;
+  cursor: pointer;
+  width: 1.125rem;
+  height: 1.125rem;
+  position: relative;
+  top: 0;
+  border: 2px solid #6b7280;
+  border-radius: 0.25rem;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.ProseMirror ul[data-type="taskList"] li input[type="checkbox"]:hover {
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.2);
+}
+
+.ProseMirror ul[data-type="taskList"] li input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.ProseMirror ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.ProseMirror ul[data-type="taskList"] li input[type="checkbox"]:checked:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div > p {
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+/* Overwrite tippy-box original max-width */
+.tippy-box {
+  max-width: 400px !important;
+}
+
+.ProseMirror:not(.dragging) .ProseMirror-selectednode {
+  outline: none !important;
+  background-color: transparent !important;
+  transition: background-color 0.2s;
+  box-shadow: none;
+}
+
+/* 코드블럭 선택 상태에서 테두리 제거 */
+.ProseMirror:not(.dragging) .ProseMirror-selectednode pre,
+.ProseMirror:not(.dragging) .ProseMirror-selectednode .hljs {
+  outline: none !important;
+  border: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.drag-handle {
+  position: fixed;
+  opacity: 1;
+  transition: opacity ease-in 0.2s;
+  border-radius: 0.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' style='fill: rgba(255, 255, 255, 0.5)'%3E%3Cpath d='M3,2 C2.44771525,2 2,1.55228475 2,1 C2,0.44771525 2.44771525,0 3,0 C3.55228475,0 4,0.44771525 4,1 C4,1.55228475 3.55228475,2 3,2 Z M3,6 C2.44771525,6 2,5.55228475 2,5 C2,4.44771525 2.44771525,4 3,4 C3.55228475,4 4,4.44771525 4,5 C4,5.55228475 3.55228475,6 3,6 Z M3,10 C2.44771525,10 2,9.55228475 2,9 C2,8.44771525 2.44771525,8 3,8 C3.55228475,8 4,8.44771525 4,9 C4,9.55228475 3.55228475,10 3,10 Z M7,2 C6.44771525,2 6,1.55228475 6,1 C6,0.44771525 6.44771525,0 7,0 C7.55228475,0 8,0.44771525 8,1 C8,1.55228475 7.55228475,2 7,2 Z M7,6 C6.44771525,6 6,5.55228475 6,5 C6,4.44771525 6.44771525,4 7,4 C7.55228475,4 8,4.44771525 8,5 C8,5.55228475 7.55228475,6 7,6 Z M7,10 C6.44771525,10 6,9.55228475 6,9 C6,8.44771525 6.44771525,8 7,8 C7.55228475,8 8,8.44771525 8,9 C8,9.55228475 7.55228475,10 7,10 Z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: calc(0.5em + 0.375rem) calc(0.5em + 0.375rem);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 1.2rem;
+  height: 1.5rem;
+  z-index: 50;
+  cursor: grab;
+}
+
+.ProseMirror-focused .drag-handle {
+  opacity: 1;
+}
+
+.drag-handle:hover {
+  background-color: var(--novel-stone-100);
+  transition: background-color 0.2s;
+}
+
+.ProseMirror iframe {
+  border: 8px solid #ffd00027;
+  border-radius: 4px;
+  min-width: 200px;
+  min-height: 200px;
+  display: block;
+  outline: 0px solid transparent;
+}
+
+/* Novel Command 스타일 (슬래시 명령) */
+.novel-command,
+[data-radix-popper-content-wrapper] .cmdk {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+  max-height: 330px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.novel-command-item,
+.cmdk-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  margin: 0.125rem;
+  transition: background-color 0.2s;
+  color: #f9fafb !important;
+}
+
+.novel-command-item:hover,
+.cmdk-item:hover {
+  background-color: #374151 !important;
+}
+
+.novel-command-item[aria-selected="true"],
+.cmdk-item[aria-selected="true"] {
+  background-color: #4b5563 !important;
+}
+
+.novel-command-icon,
+.cmdk-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #4b5563;
+  border-radius: 0.25rem;
+  background-color: #1f2937;
+  margin-right: 0.5rem;
+  color: #f9fafb;
+}
+
+.novel-command-content,
+.cmdk-item-content {
+  flex: 1;
+}
+
+.novel-command-title,
+.cmdk-item-title {
+  font-weight: 500;
+  color: #f9fafb !important;
+  font-size: 0.875rem;
+}
+
+.novel-command-description,
+.cmdk-item-description {
+  font-size: 0.75rem;
+  color: #9ca3af !important;
+  margin-top: 0.125rem;
+}
+
+/* Novel Bubble Menu 스타일 (텍스트 선택 시 나타나는 메뉴) */
+.novel-bubble-menu,
+[data-radix-popper-content-wrapper] .bubble-menu {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.novel-bubble-item,
+.bubble-menu button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  color: #f9fafb !important;
+  border: none;
+  background: none;
+  font-size: 0.875rem;
+}
+
+.novel-bubble-item:hover,
+.bubble-menu button:hover {
+  background-color: #374151 !important;
+}
+
+.novel-bubble-item.active,
+.bubble-menu button.active {
+  background-color: #4b5563 !important;
+  color: #fbbf24 !important;
+}
+
+/* Novel Toolbar 스타일 (고정 툴바) */
+.novel-toolbar,
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.novel-toolbar-button,
+.editor-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: none;
+  color: #f9fafb !important;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.875rem;
+}
+
+.novel-toolbar-button:hover,
+.editor-toolbar button:hover {
+  background-color: #374151 !important;
+}
+
+.novel-toolbar-button.active,
+.editor-toolbar button.active {
+  background-color: #4b5563 !important;
+  color: #fbbf24 !important;
+}
+
+/* Popover 스타일 (드롭다운 메뉴) */
+[data-radix-popper-content-wrapper] {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+  color: #f9fafb !important;
+}
+
+[data-radix-popper-content-wrapper] button {
+  color: #f9fafb !important;
+  background: none !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 0.25rem !important;
+  transition: background-color 0.2s !important;
+}
+
+[data-radix-popper-content-wrapper] button:hover {
+  background-color: #374151 !important;
+}
+
+/* Separator 스타일 */
+.separator {
+  background-color: #374151 !important;
+  width: 1px;
+  height: 1.5rem;
+  margin: 0 0.25rem;
+}
+
+/* Custom Youtube Video CSS */
+div[data-youtube-video],
+.youtube-video-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+div[data-youtube-video] > iframe,
+.youtube-video-container > iframe {
+  cursor: move;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  display: block;
+}
+
+/* 유튜브 비디오 선택 시 테두리 */
+.ProseMirror-selectednode div[data-youtube-video] > iframe,
+.ProseMirror-selectednode .youtube-video-container > iframe {
+  transition: outline 0.15s;
+  outline: 6px solid #fbbf24;
+}
+
+/* 반응형 설정 */
+@media only screen and (max-width: 480px) {
+  div[data-youtube-video] > iframe,
+  .youtube-video-container > iframe {
+    max-height: 50px;
+  }
+}
+
+@media only screen and (max-width: 720px) {
+  div[data-youtube-video] > iframe,
+  .youtube-video-container > iframe {
+    max-height: 100px;
+  }
+}
+
+
+
+/* 반응형 설정 */
+@media only screen and (max-width: 768px) {
+  div[data-youtube-video] > iframe {
+    max-width: 100%;
+  }
+}
+
+/* CSS for bold coloring and highlighting issue*/
+span[style] > strong {
+  color: inherit;
+}
+
+mark[style] > strong {
+  color: inherit;
+}
+

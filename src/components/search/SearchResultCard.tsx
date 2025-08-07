@@ -2,6 +2,8 @@
 
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
 
 interface SearchResultCardProps {
     id: string;
@@ -11,24 +13,8 @@ interface SearchResultCardProps {
     readTime: string;
     category: string;
     slug: string;
+    imageUrl?: string;
 }
-
-const getCategoryColor = (category: string) => {
-    const colorMap: Record<string, { bg: string; text: string }> = {
-        '개발': { bg: 'bg-blue-500/20', text: 'text-blue-400' },
-        '기술': { bg: 'bg-green-500/20', text: 'text-green-400' },
-        '일상': { bg: 'bg-purple-500/20', text: 'text-purple-400' },
-        '리뷰': { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
-        '튜토리얼': { bg: 'bg-pink-500/20', text: 'text-pink-400' },
-        '프로젝트': { bg: 'bg-indigo-500/20', text: 'text-indigo-400' },
-        '회고': { bg: 'bg-red-500/20', text: 'text-red-400' },
-        '팁': { bg: 'bg-teal-500/20', text: 'text-teal-400' },
-        '소개': { bg: 'bg-orange-500/20', text: 'text-orange-400' },
-        '경험': { bg: 'bg-cyan-500/20', text: 'text-cyan-400' }
-    };
-
-    return colorMap[category] || { bg: 'bg-gray-500/20', text: 'text-gray-400' };
-};
 
 export function SearchResultCard({
     title,
@@ -36,34 +22,58 @@ export function SearchResultCard({
     publishedDate,
     readTime,
     category,
-    slug
+    slug,
+    imageUrl
 }: SearchResultCardProps) {
-    const categoryColor = getCategoryColor(category);
+    const [categoryStyle, setCategoryStyle] = useState<CategoryStyle>({ bg: 'bg-gray-600/80', text: 'text-gray-100' });
+
+    useEffect(() => {
+        const loadCategoryStyle = async () => {
+            const style = await getCategoryStyleByName(category);
+            setCategoryStyle(style);
+        };
+        loadCategoryStyle();
+    }, [category]);
 
     return (
         <Link href={`/posts/${slug}`} className="block">
-            <div className="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg transition-all hover:bg-zinc-800/50 hover:shadow-lg hover:shadow-gray-900/50 border border-gray-800/30 p-4">
-                {/* Title */}
-                <h3 className="mb-2 text-lg font-bold text-white group-hover:text-purple-400 transition-colors line-clamp-1">
-                    {title}
-                </h3>
+            <div className="group relative flex cursor-pointer flex-col overflow-hidden rounded-xl transition-all duration-300 hover:bg-gray-800/20 hover:shadow-xl hover:shadow-purple-500/20 border-0 p-6 backdrop-blur-sm shadow-lg">
+                {/* Background Image with Gradient */}
+                {imageUrl && (
+                    <div
+                        className="absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-15 transition-opacity duration-300"
+                        style={{
+                            backgroundImage: `url(${imageUrl})`,
+                            backgroundPosition: 'right center'
+                        }}
+                    />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
 
-                {/* Summary */}
-                <p className="mb-3 flex-1 text-sm text-gray-300 line-clamp-2 leading-relaxed">
-                    {summary}
-                </p>
+                {/* Content */}
+                <div className="relative z-10">
+                    {/* Title */}
+                    <h3 className="mb-3 text-xl font-bold text-white group-hover:text-purple-400 transition-colors line-clamp-1">
+                        {title}
+                    </h3>
 
-                {/* Date, Read Time and Category */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 text-xs text-gray-400">
-                        <span>{publishedDate}</span>
-                        <div className="flex items-center space-x-1">
-                            <Clock className="w-3 h-3" />
-                            <span>{readTime}</span>
+                    {/* Summary */}
+                    <p className="mb-4 flex-1 text-sm text-gray-300 line-clamp-2 leading-relaxed">
+                        {summary}
+                    </p>
+
+                    {/* Date, Read Time and Category */}
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3 text-xs text-gray-400">
+                            <span>{publishedDate}</span>
+                            <div className="flex items-center space-x-1">
+                                <Clock className="w-3 h-3" />
+                                <span>{readTime}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className={`rounded-full ${categoryColor.bg} px-3 py-1 text-xs font-medium ${categoryColor.text}`}>
-                        {category}
+                        <div className={`rounded-full ${categoryStyle.bg} px-3 py-1.5 text-xs font-medium ${categoryStyle.text} backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300`}>
+                            {category}
+                        </div>
                     </div>
                 </div>
             </div>
