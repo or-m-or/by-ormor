@@ -103,7 +103,7 @@ export default function SearchPage() {
             <div className="relative z-10 flex flex-col min-h-screen">
                 <Navigation />
 
-                <main className="flex-1 md:ml-28 pb-16 md:pb-0 p-6">
+                <main className="flex-1 md:ml-28 pb-32 md:pb-16 p-6">
                     <div className="max-w-3xl mx-auto">
                         {/* 상단 바 */}
                         <div className="flex justify-between items-center mb-8">
