@@ -98,12 +98,12 @@ export const NodeSelector = ({ open, onOpenChange }: NodeSelectorProps) => {
     return (
         <Popover modal={true} open={open} onOpenChange={onOpenChange}>
             <PopoverTrigger asChild className="gap-2 rounded-none border-none hover:bg-accent focus:ring-0">
-                <Button size="sm" variant="ghost" className="gap-2 px-3 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200">
+                <Button size="sm" variant="ghost" className="gap-2 px-2 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200">
                     <span className="whitespace-nowrap text-sm">{activeItem.name}</span>
                     <ChevronDown className="h-4 w-4 text-gray-400" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent sideOffset={5} align="start" className="w-48 p-2 bg-gray-900/95 backdrop-blur-md border border-gray-600/50 rounded-xl shadow-2xl">
+            <PopoverContent sideOffset={5} align="start" className="w-48 p-1 bg-gray-900/95 backdrop-blur-md border-0 rounded-xl shadow-2xl">
                 {items.map((item) => (
                     <EditorBubbleItem
                         key={item.name}
@@ -111,10 +111,10 @@ export const NodeSelector = ({ open, onOpenChange }: NodeSelectorProps) => {
                             item.command(editor as NonNullable<ReturnType<typeof useEditor>["editor"]>);
                             onOpenChange(false);
                         }}
-                        className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
+                        className="flex cursor-pointer items-center justify-between rounded-lg px-2 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
                     >
                         <div className="flex items-center space-x-2">
-                            <div className="rounded-md border border-gray-600 bg-gray-800 p-1.5">
+                            <div className="rounded-md border border-gray-600 bg-gray-800 p-1">
                                 <item.icon className="h-3 w-3 text-gray-400" />
                             </div>
                             <span>{item.name}</span>

@@ -42,7 +42,7 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
     return (
         <Popover modal={true} open={open} onOpenChange={onOpenChange}>
             <PopoverTrigger asChild>
-                <Button size="sm" variant="ghost" className="gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200">
+                <Button size="sm" variant="ghost" className="gap-2 rounded-lg px-2 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200">
                     <p className="text-base">↗</p>
                     <p
                         className={cn("underline decoration-gray-500 underline-offset-4", {
@@ -53,7 +53,7 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
                     </p>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-60 p-0 rounded-xl border border-gray-600/50 shadow-2xl bg-gray-900/95 backdrop-blur-md" sideOffset={10}>
+            <PopoverContent align="start" className="w-60 p-0 rounded-xl border-0 shadow-2xl bg-gray-900/95 backdrop-blur-md" sideOffset={10}>
                 <form
                     onSubmit={(e) => {
                         const target = e.currentTarget as HTMLFormElement;

@@ -229,16 +229,15 @@ const NovelEditor = ({
                     {/* 노션 스타일 Bubble Menu - 텍스트 선택 시에만 나타남 (편집 모드에서만) */}
                     {editable && (
                         <EditorBubble
-                            className="flex items-center gap-1 p-3 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-600/50"
+                            className="flex items-center gap-0.5 p-1 bg-gray-800/40 backdrop-blur-xl rounded-xl shadow-2xl"
                         >
                             <NodeSelector open={openNode} onOpenChange={setOpenNode} />
-                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <div className="w-px h-6 bg-gradient-to-b from-gray-500/40 to-gray-300/40 mx-1 shadow-inner" />
                             <LinkSelector open={openLink} onOpenChange={setOpenLink} />
-                            <Separator orientation="vertical" className="bg-gray-600/50" />
-                            <MathSelector />
-                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <div className="w-px h-6 bg-gradient-to-b from-gray-500/40 to-gray-300/40 mx-1 shadow-inner" />
                             <TextButtons />
-                            <Separator orientation="vertical" className="bg-gray-600/50" />
+                            <MathSelector />
+                            <div className="w-px h-6 bg-gradient-to-b from-gray-500/40 to-gray-300/40 mx-1 shadow-inner" />
                             <ColorSelector open={openColor} onOpenChange={setOpenColor} />
                         </EditorBubble>
                     )}

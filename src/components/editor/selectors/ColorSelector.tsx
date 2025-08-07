@@ -13,7 +13,7 @@ export interface BubbleColorMenuItem {
 const TEXT_COLORS: BubbleColorMenuItem[] = [
     {
         name: "기본값",
-        color: "#ffffff",
+        color: "#E5E7EB",
     },
     {
         name: "회색",
@@ -21,31 +21,31 @@ const TEXT_COLORS: BubbleColorMenuItem[] = [
     },
     {
         name: "분홍색",
-        color: "#EC4899",
+        color: "#F472B6",
     },
     {
         name: "빨강색",
-        color: "#EF4444",
+        color: "#F87171",
     },
     {
         name: "주황색",
-        color: "#F97316",
+        color: "#FB923C",
     },
     {
         name: "노랑색",
-        color: "#EAB308",
+        color: "#FBBF24",
     },
     {
         name: "초록색",
-        color: "#22C55E",
+        color: "#4ADE80",
     },
     {
         name: "파랑색",
-        color: "#3B82F6",
+        color: "#60A5FA",
     },
     {
         name: "보라색",
-        color: "#A855F7",
+        color: "#C084FC",
     },
 ];
 
@@ -60,31 +60,31 @@ const HIGHLIGHT_COLORS: BubbleColorMenuItem[] = [
     },
     {
         name: "분홍색",
-        color: "#BE185D",
+        color: "#831843",
     },
     {
         name: "빨강색",
-        color: "#DC2626",
+        color: "#991B1B",
     },
     {
         name: "주황색",
-        color: "#EA580C",
+        color: "#9A3412",
     },
     {
         name: "노랑색",
-        color: "#CA8A04",
+        color: "#92400E",
     },
     {
         name: "초록색",
-        color: "#16A34A",
+        color: "#166534",
     },
     {
         name: "파랑색",
-        color: "#2563EB",
+        color: "#1E40AF",
     },
     {
         name: "보라색",
-        color: "#9333EA",
+        color: "#581C87",
     },
 ];
 
@@ -98,13 +98,12 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
 
     if (!editor) return null;
     const activeColorItem = TEXT_COLORS.find(({ color }) => editor.isActive("textStyle", { color }));
-
     const activeHighlightItem = HIGHLIGHT_COLORS.find(({ color }) => editor.isActive("highlight", { color }));
 
     return (
         <Popover modal={true} open={open} onOpenChange={onOpenChange}>
             <PopoverTrigger asChild>
-                <Button size="sm" className="gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200" variant="ghost">
+                <Button size="sm" className="gap-2 rounded-lg px-1.5 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200" variant="ghost">
                     <span
                         className="rounded-md px-1.5 py-0.5 font-medium"
                         style={{
@@ -119,12 +118,13 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
             </PopoverTrigger>
 
             <PopoverContent
-                sideOffset={5}
-                className="my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded-xl border border-gray-600/50 p-2 shadow-2xl bg-gray-900/95 backdrop-blur-md"
+                sideOffset={8}
+                className="my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded-xl border-0 p-1 shadow-2xl bg-black/80 backdrop-blur-xl"
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
                 align="start"
             >
                 <div className="flex flex-col">
-                    <div className="my-1 px-2 text-sm font-semibold text-gray-400">글자색</div>
+                    <div className="my-1 px-2 text-sm font-semibold text-gray-300">글자색</div>
                     {TEXT_COLORS.map(({ name, color }) => (
                         <EditorBubbleItem
                             key={name}
@@ -139,7 +139,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                                 }
                                 onOpenChange(false);
                             }}
-                            className="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"
+                            className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-700/30 transition-all duration-200 rounded-lg"
                         >
                             <div className="flex items-center gap-2">
                                 <div className="rounded-sm border px-2 py-px font-medium" style={{ color }}>
@@ -151,7 +151,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                     ))}
                 </div>
                 <div>
-                    <div className="my-1 px-2 text-sm font-semibold text-gray-400">배경색</div>
+                    <div className="my-1 px-2 text-sm font-semibold text-gray-300">배경색</div>
                     {HIGHLIGHT_COLORS.map(({ name, color }) => (
                         <EditorBubbleItem
                             key={name}
@@ -162,7 +162,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                                 }
                                 onOpenChange(false);
                             }}
-                            className="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"
+                            className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-700/30 transition-all duration-200 rounded-lg"
                         >
                             <div className="flex items-center gap-2">
                                 <div className="rounded-sm border px-2 py-px font-medium" style={{ backgroundColor: color }}>

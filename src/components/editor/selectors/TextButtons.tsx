@@ -49,7 +49,7 @@ export const TextButtons = () => {
                         item.command(editor as NonNullable<ReturnType<typeof useEditor>["editor"]>);
                     }}
                 >
-                    <Button size="sm" className="rounded-lg px-2 py-1.5 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200" variant="ghost" type="button">
+                    <Button size="sm" className="rounded-lg px-1.5 py-1.5 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200" variant="ghost" type="button">
                         <item.icon
                             className={cn("h-4 w-4", {
                                 "text-purple-400": item.isActive(editor),

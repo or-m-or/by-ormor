@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { createPortal } from 'react-dom';
@@ -9,7 +9,9 @@ interface SelectOption {
     id: number;
     name: string;
     color?: string;
-    [key: string]: string | number | undefined;
+    icon?: React.ReactNode;
+    customContent?: React.ReactNode;
+    [key: string]: string | number | undefined | React.ReactNode;
 }
 
 interface SelectProps {

@@ -29,7 +29,7 @@ export const MathSelector = () => {
             <Button
                 variant="ghost"
                 size="sm"
-                className="rounded-lg w-12 px-3 py-1.5 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
+                className="rounded-lg w-10 px-1.5 py-1.5 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
             >
                 <SigmaIcon
                     className={cn("size-4", { "text-purple-400": editor.isActive("math") })}
