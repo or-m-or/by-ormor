@@ -22,7 +22,7 @@ import { ColorSelector } from "./selectors/ColorSelector";
 import { LinkSelector } from "./selectors/LinkSelector";
 import { MathSelector } from "./selectors/MathSelector";
 import { NodeSelector } from "./selectors/NodeSelector";
-import { Separator } from "../ui/separator";
+
 import EditorBubble from "./bubble/editor-bubble";
 
 import { uploadFn } from "./image-upload";
