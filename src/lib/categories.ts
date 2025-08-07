@@ -23,7 +23,7 @@ export interface CategoryStyle {
 export const getCategoryStyle = (category: Category): CategoryStyle => {
     return {
         bg: category.bg_color, // 그라데이션은 opacity를 포함하므로 그대로 사용
-        text: 'text-white font-medium'
+        text: `text-${category.text_color} font-medium`
     };
 };
 
@@ -35,7 +35,18 @@ export const getCategoryStyleByName = async (categoryName: string): Promise<Cate
     }
 
     try {
-        const category = await getCategoryByName(categoryName);
+        // 먼저 활성화된 카테고리에서 찾기
+        let category = await getCategoryByName(categoryName);
+
+        // 활성화된 카테고리가 없으면 비활성화된 카테고리도 확인
+        if (!category) {
+            category = await getCategoryByNameForAdmin(categoryName);
+            if (category && !category.is_active) {
+                // 카테고리가 비활성화되어 있으면 기본 스타일 반환
+                return { bg: 'bg-gray-600/80', text: 'text-gray-100' };
+            }
+        }
+
         if (category) {
             return getCategoryStyle(category);
         }
@@ -84,7 +95,7 @@ export const getCategoryByName = async (name: string): Promise<Category | null> 
             .select('*')
             .eq('name', name)
             .eq('is_active', true)
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('카테고리 검색 중 오류:', error);
@@ -98,6 +109,27 @@ export const getCategoryByName = async (name: string): Promise<Category | null> 
     }
 };
 
+// 카테고리 이름으로 카테고리를 찾는 함수 (모든 카테고리, 관리자용)
+export const getCategoryByNameForAdmin = async (name: string): Promise<Category | null> => {
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('name', name)
+            .maybeSingle();
+
+        if (error) {
+            console.error('카테고리 검색 중 오류:', error);
+            return null;
+        }
+
+        return data;
+    } catch (error) {
+        console.error('카테고리 검색 중 예외 발생:', error);
+        return null;
+    }
+};
+
 // 카테고리 slug로 카테고리를 찾는 함수
 export const getCategoryBySlug = async (slug: string): Promise<Category | null> => {
     try {
@@ -106,7 +138,7 @@ export const getCategoryBySlug = async (slug: string): Promise<Category | null> 
             .select('*')
             .eq('slug', slug)
             .eq('is_active', true)
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('카테고리 검색 중 오류:', error);

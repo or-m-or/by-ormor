@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAllSocialLinks, createSocialLink, updateSocialLink, deleteSocialLink, SocialLink } from '@/lib/database';
 import { Settings, ArrowLeft, Save, Github, Instagram, Mail, Globe, Plus, Trash2, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function SettingsPage() {
     const { user, loading } = useAuth();
@@ -81,7 +82,7 @@ export default function SettingsPage() {
 
     const handleAddSocialLink = async () => {
         if (!newLink.platform || !newLink.display_name || !newLink.url || !newLink.icon_name) {
-            alert('모든 필드를 입력해주세요.');
+            toast.error('모든 필드를 입력해주세요.');
             return;
         }
 
@@ -98,14 +99,15 @@ export default function SettingsPage() {
                     sort_order: 0
                 });
                 setShowAddForm(false);
-                alert('SNS 링크가 추가되었습니다!');
+                toast.success('SNS 링크가 추가되었습니다!');
 
                 // Footer 새로고침을 위한 이벤트 발생
                 window.dispatchEvent(new CustomEvent('socialLinksUpdated'));
             }
         } catch (error) {
             console.error('SNS 링크 추가 중 오류:', error);
-            alert('SNS 링크 추가에 실패했습니다.');
+            console.error('에러 객체 전체:', JSON.stringify(error, null, 2));
+            toast.error('SNS 링크 추가에 실패했습니다.');
         }
     };
 
@@ -119,14 +121,14 @@ export default function SettingsPage() {
             const success = await deleteSocialLink(platform);
             if (success) {
                 setSocialLinks(prev => prev.filter(link => link.platform !== platform));
-                alert('SNS 링크가 삭제되었습니다!');
+                toast.success('SNS 링크가 삭제되었습니다!');
 
                 // Footer 새로고침을 위한 이벤트 발생
                 window.dispatchEvent(new CustomEvent('socialLinksUpdated'));
             }
         } catch (error) {
             console.error('SNS 링크 삭제 중 오류:', error);
-            alert('SNS 링크 삭제에 실패했습니다.');
+            toast.error('SNS 링크 삭제에 실패했습니다.');
         } finally {
             setDeletingPlatform(null);
         }
@@ -194,7 +196,7 @@ export default function SettingsPage() {
 
             {/* 스크롤되는 내용 */}
             <div className="relative z-10">
-                <main className="p-6">
+                <main className="p-6 pb-32">
                     <div className="max-w-4xl mx-auto">
                         {/* 헤더 */}
                         <header className="mb-8">

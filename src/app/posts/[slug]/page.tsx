@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { getPostBySlug, getAllPosts } from '@/lib/database';
+import { getPostBySlug, getPostBySlugForAdmin, getAllPosts } from '@/lib/database';
 import { Post } from '@/lib/supabase';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -11,10 +11,12 @@ import { PostHeader } from '@/components/layouts/PostHeader';
 import TableOfContents from '@/components/layouts/TableOfContents';
 import { RelatedPosts } from '@/components/layouts/RelatedPosts';
 import NovelEditor from '@/components/editor/NovelEditor';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function PostPage() {
     const params = useParams();
     const slug = params.slug as string;
+    const { user, loading: authLoading } = useAuth();
     const [post, setPost] = useState<Post | null>(null);
     const [allPosts, setAllPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
@@ -26,10 +28,13 @@ export default function PostPage() {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const [postData, allPostsData] = await Promise.all([
-                    getPostBySlug(slug),
-                    getAllPosts()
-                ]);
+
+                // 인증 로딩이 완료된 후에만 게시물 조회
+                if (authLoading) return;
+
+                // 관리자인 경우 비활성화된 게시물도 조회 가능
+                const postData = user ? await getPostBySlugForAdmin(slug) : await getPostBySlug(slug);
+                const allPostsData = await getAllPosts();
 
                 if (!postData) {
                     setError('게시물을 찾을 수 없습니다.');
@@ -46,12 +51,12 @@ export default function PostPage() {
             }
         };
 
-        if (slug) {
+        if (slug && !authLoading) {
             fetchData();
         }
-    }, [slug]);
+    }, [slug, user, authLoading]);
 
-    if (loading) {
+    if (loading || authLoading) {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>

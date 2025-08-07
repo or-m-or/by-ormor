@@ -29,8 +29,13 @@ export function SearchResultCard({
 
     useEffect(() => {
         const loadCategoryStyle = async () => {
-            const style = await getCategoryStyleByName(category);
-            setCategoryStyle(style);
+            try {
+                const style = await getCategoryStyleByName(category);
+                setCategoryStyle(style);
+            } catch (error) {
+                console.error('카테고리 스타일 로드 중 오류:', error);
+                setCategoryStyle({ bg: 'bg-gray-600/80', text: 'text-gray-100' });
+            }
         };
         loadCategoryStyle();
     }, [category]);

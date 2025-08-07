@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import PostForm from '@/components/PostForm';
-import { getPostBySlug, updatePost } from '@/lib/database';
+import { getPostBySlugForAdmin, updatePost } from '@/lib/database';
 import type { JSONContent } from 'novel';
 import { defaultEditorContent } from '@/lib/content';
 
@@ -31,7 +31,7 @@ export default function EditPostPage() {
     const loadPost = useCallback(async () => {
         try {
             setLoadingPost(true);
-            const post = await getPostBySlug(slug);
+            const post = await getPostBySlugForAdmin(slug);
 
             if (post) {
                 setInitialData({

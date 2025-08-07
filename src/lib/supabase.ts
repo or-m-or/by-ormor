@@ -17,6 +17,7 @@ export interface Post {
     date: string;
     description?: string;
     content: JSONContent | string; // Novel 에디터의 JSONContent 또는 기존 HTML 문자열
+    is_active?: boolean; // 게시물 활성화 상태
     created_at?: string;
     updated_at?: string;
 } 

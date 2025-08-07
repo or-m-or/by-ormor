@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getAllPosts, deletePost } from '@/lib/database';
+import { getAllPostsForAdmin, deletePost, togglePostStatus } from '@/lib/database';
 import { Post } from '@/lib/supabase';
 import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
-import { ArrowLeft, Plus, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, Eye, ChevronLeft, ChevronRight, Power, PowerOff } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
 
 export default function PostsPage() {
     const { user, loading } = useAuth();
@@ -17,6 +18,7 @@ export default function PostsPage() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [togglingId, setTogglingId] = useState<string | null>(null);
     const [categoryStyles, setCategoryStyles] = useState<Record<string, CategoryStyle>>({});
 
     // 페이지네이션 상태
@@ -34,7 +36,7 @@ export default function PostsPage() {
         const fetchPosts = async () => {
             try {
                 setLoadingPosts(true);
-                const allPosts = await getAllPosts();
+                const allPosts = await getAllPostsForAdmin();
                 setPosts(allPosts);
             } catch (error) {
                 console.error('게시물 로드 중 오류:', error);
@@ -84,7 +86,15 @@ export default function PostsPage() {
     };
 
     const handleDelete = async (postId: string) => {
-        if (!confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+
+        // 비활성화된 게시물인 경우 특별한 확인 메시지
+        const confirmMessage = !post.is_active
+            ? `비활성화된 게시물 "${post.title}"을(를) 정말로 삭제하시겠습니까?\n\n이 게시물은 현재 비활성화 상태이므로 일반 사용자에게는 보이지 않습니다.`
+            : `게시물 "${post.title}"을(를) 정말로 삭제하시겠습니까?`;
+
+        if (!confirm(confirmMessage)) {
             return;
         }
 
@@ -92,14 +102,40 @@ export default function PostsPage() {
             setDeletingId(postId);
             await deletePost(postId);
             setPosts(posts.filter(post => post.id !== postId));
-            alert('게시물이 삭제되었습니다.');
+            toast.success('게시물이 삭제되었습니다.');
         } catch (error) {
             console.error('게시물 삭제 중 오류:', error);
-            alert('게시물 삭제 중 오류가 발생했습니다.');
+            toast.error('게시물 삭제 중 오류가 발생했습니다.');
         } finally {
             setDeletingId(null);
         }
     };
+
+    const handleToggleStatus = async (postId: string) => {
+        try {
+            setTogglingId(postId);
+            const updatedPost = await togglePostStatus(postId);
+
+            if (updatedPost) {
+                setPosts(posts.map(post => post.id === postId ? updatedPost : post));
+                toast.success(`게시물이 ${updatedPost.is_active ? '활성화' : '비활성화'}되었습니다.`);
+            }
+        } catch (error) {
+            if (error instanceof Error && error.message === 'CATEGORY_INACTIVE') {
+                toast.error('카테고리가 비활성화되어 있어 게시물을 활성화할 수 없습니다.', {
+                    description: '먼저 카테고리 관리 페이지에서 카테고리를 활성화해주세요.',
+                    duration: 5000,
+                });
+            } else {
+                console.error('게시물 상태 변경 중 오류:', error);
+                toast.error('게시물 상태 변경 중 오류가 발생했습니다.');
+            }
+        } finally {
+            setTogglingId(null);
+        }
+    };
+
+
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('ko-KR');
@@ -169,7 +205,7 @@ export default function PostsPage() {
                         </header>
 
                         {/* 통계 정보 */}
-                        <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div className="bg-gray-800/20 rounded-xl border-0 p-6 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
                                 <div className="text-3xl font-bold text-white mb-1">{posts.length}</div>
                                 <div className="text-gray-400 text-sm">총 게시물</div>
@@ -181,10 +217,16 @@ export default function PostsPage() {
                                 <div className="text-gray-400 text-sm">카테고리</div>
                             </div>
                             <div className="bg-gray-800/20 rounded-xl border-0 p-6 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-                                <div className="text-3xl font-bold text-white mb-1">
-                                    {posts.filter(post => post.updated_at && post.updated_at !== post.created_at).length}
+                                <div className="text-3xl font-bold text-green-400 mb-1">
+                                    {posts.filter(post => post.is_active).length}
                                 </div>
-                                <div className="text-gray-400 text-sm">수정된 게시물</div>
+                                <div className="text-gray-400 text-sm">활성 게시물</div>
+                            </div>
+                            <div className="bg-gray-800/20 rounded-xl border-0 p-6 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                                <div className="text-3xl font-bold text-red-400 mb-1">
+                                    {posts.filter(post => !post.is_active).length}
+                                </div>
+                                <div className="text-gray-400 text-sm">비활성 게시물</div>
                             </div>
                         </div>
 
@@ -249,6 +291,9 @@ export default function PostsPage() {
                                                         카테고리
                                                     </th>
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                                        상태
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                         작성일
                                                     </th>
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -279,6 +324,30 @@ export default function PostsPage() {
                                                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${categoryStyles[post.category?.name || 'ETC']?.bg || 'bg-purple-900/50'} ${categoryStyles[post.category?.name || 'ETC']?.text || 'text-purple-300'}`}>
                                                                 {post.category?.name || 'ETC'}
                                                             </span>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <button
+                                                                onClick={() => handleToggleStatus(post.id)}
+                                                                disabled={togglingId === post.id}
+                                                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full transition-all duration-200 hover:scale-105 cursor-pointer ${post.is_active
+                                                                    ? 'bg-green-900/50 text-green-300 hover:bg-red-900/50 hover:text-red-300'
+                                                                    : 'bg-red-900/50 text-red-300 hover:bg-green-900/50 hover:text-green-300'
+                                                                    } ${togglingId === post.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                                title={`클릭하여 ${post.is_active ? '비활성화' : '활성화'}`}
+                                                            >
+                                                                {togglingId === post.id ? (
+                                                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current"></div>
+                                                                ) : (
+                                                                    <>
+                                                                        {post.is_active ? (
+                                                                            <Power className="w-3 h-3 mr-1" />
+                                                                        ) : (
+                                                                            <PowerOff className="w-3 h-3 mr-1" />
+                                                                        )}
+                                                                        {post.is_active ? '활성' : '비활성'}
+                                                                    </>
+                                                                )}
+                                                            </button>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                             {formatDate(post.created_at || post.date)}
