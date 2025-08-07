@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Save, Upload, X, ChevronDown } from 'lucide-react';
@@ -11,7 +10,6 @@ import { getAllCategories, Category } from '@/lib/categories';
 import { getPostBySlug } from '@/lib/database';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { JSONContent } from 'novel';
-import { defaultEditorContent } from '@/lib/content';
 
 interface PostFormData {
     title: string;
@@ -37,7 +35,7 @@ export default function PostForm({
     isEditing = false,
     loading = false
 }: PostFormProps) {
-    const router = useRouter();
+
     const [saving, setSaving] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(true);
@@ -269,11 +267,14 @@ export default function PostForm({
                                     {/* 이미지 미리보기 또는 업로드 박스 */}
                                     <div className="flex-shrink-0 w-full">
                                         {formData.thumbnail ? (
-                                            <img
-                                                src={formData.thumbnail}
-                                                alt="썸네일 미리보기"
-                                                className="w-full h-[394px] object-cover rounded-lg"
-                                            />
+                                            <div className="relative w-full h-[394px] rounded-lg overflow-hidden">
+                                                <Image
+                                                    src={formData.thumbnail}
+                                                    alt="썸네일 미리보기"
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
                                         ) : (
                                             <label className="w-full h-[394px] border-2 border-dashed border-gray-600 rounded-lg flex items-center justify-center bg-gray-800/20 hover:bg-gray-800/40 transition-colors duration-200 cursor-pointer">
                                                 <div className="text-center">

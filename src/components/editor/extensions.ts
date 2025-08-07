@@ -16,12 +16,10 @@ import {
     TiptapLink,
     TiptapUnderline,
     Twitter,
-    UpdatedImage,
     UploadImagesPlugin,
     Youtube,
     CodeBlockLowlight,
 } from "novel";
-import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { common, createLowlight } from "lowlight";
 
 const lowlight = createLowlight(common);

@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { CategoryBadge } from '@/components/badge/CategoryBadge';
 import { Post } from '@/lib/supabase';
 
@@ -42,7 +41,7 @@ export const PostHeader = ({ post }: Props) => {
                 />
                 {/* 카테고리 태그 - 이미지 위 좌측 상단 */}
                 <div className="absolute top-3 left-3 z-10">
-                    <CategoryBadge category={category?.name ?? category} className="transition-transform hover:scale-105" />
+                    <CategoryBadge category={category?.name ?? (typeof category === 'string' ? category : '기타')} className="transition-transform hover:scale-105" />
                 </div>
             </div>
 

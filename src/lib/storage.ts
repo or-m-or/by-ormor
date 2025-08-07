@@ -6,7 +6,7 @@ export async function uploadImage(file: File, fileName: string): Promise<string 
         const fileExt = file.name.split('.').pop();
         const filePath = `${fileName}.${fileExt}`;
 
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
             .from('blog-images')
             .upload(filePath, file, {
                 cacheControl: '3600',

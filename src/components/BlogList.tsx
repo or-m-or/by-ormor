@@ -62,8 +62,8 @@ const BlogList = () => {
             key={post.id}
             slug={post.slug}
             title={post.title}
-            summary={post.description}
-            imageUrl={post.thumbnail}
+            summary={post.description || ''}
+            imageUrl={post.thumbnail || ''}
             publishedDate={new Date(post.date).toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: 'long',

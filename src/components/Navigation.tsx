@@ -1,7 +1,6 @@
 'use client';
 
 import { Home, Search, Mail, Shield } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
     Tooltip,
@@ -10,21 +9,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface BlogPost {
-    id: string;
-    title: string;
-    summary: string;
-    imageUrl: string;
-    publishedDate: string;
-    readTime: string;
-    category: string;
-}
-
-interface NavigationProps {
-    posts?: BlogPost[];
-}
-
-const Navigation = ({ posts = [] }: NavigationProps) => {
+const Navigation = () => {
     return (
         <TooltipProvider>
             <>

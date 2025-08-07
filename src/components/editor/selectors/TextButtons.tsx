@@ -46,7 +46,7 @@ export const TextButtons = () => {
                 <EditorBubbleItem
                     key={item.name}
                     onSelect={(editor) => {
-                        item.command(editor);
+                        item.command(editor as NonNullable<ReturnType<typeof useEditor>["editor"]>);
                     }}
                 >
                     <Button size="sm" className="rounded-lg px-2 py-1.5 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200" variant="ghost" type="button">

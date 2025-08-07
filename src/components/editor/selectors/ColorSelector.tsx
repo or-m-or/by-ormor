@@ -1,5 +1,6 @@
 import { Check, ChevronDown } from "lucide-react";
 import { useEditor } from "novel";
+import type { EditorInstance } from "novel";
 import { EditorBubbleItem } from "../bubble/editor-bubble-item";
 
 import { Button } from "@/components/ui/button";
@@ -128,13 +129,14 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                         <EditorBubbleItem
                             key={name}
                             onSelect={(editorInstance) => {
-                                editorInstance.commands.unsetColor();
-                                name !== "기본값" &&
-                                    editorInstance
+                                (editorInstance as EditorInstance).commands.unsetColor();
+                                if (name !== "기본값") {
+                                    (editorInstance as EditorInstance)
                                         .chain()
                                         .focus()
                                         .setColor(color || "")
                                         .run();
+                                }
                                 onOpenChange(false);
                             }}
                             className="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"
@@ -154,8 +156,10 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                         <EditorBubbleItem
                             key={name}
                             onSelect={(editorInstance) => {
-                                editorInstance.commands.unsetHighlight();
-                                name !== "기본값" && editorInstance.chain().focus().setHighlight({ color }).run();
+                                (editorInstance as EditorInstance).commands.unsetHighlight();
+                                if (name !== "기본값") {
+                                    (editorInstance as EditorInstance).chain().focus().setHighlight({ color }).run();
+                                }
                                 onOpenChange(false);
                             }}
                             className="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"

@@ -1,5 +1,4 @@
 import { supabase, Post } from './supabase';
-import type { JSONContent } from 'novel';
 import type { Category } from './categories';
 
 // 카테고리 타입 정의

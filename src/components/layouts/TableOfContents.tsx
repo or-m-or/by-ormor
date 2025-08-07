@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 interface TableOfContentsProps {
-    content: any; // Changed from string to any for Novel JSON
+    content: unknown; // Changed from string to unknown for Novel JSON
 }
 
 interface TocItem {
@@ -20,17 +20,18 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
 
         try {
             // Novel JSON에서 제목 태그들을 직접 추출
-            const extractHeadings = (content: any): TocItem[] => {
-                if (!content || !content.content) return [];
+            const extractHeadings = (content: unknown): TocItem[] => {
+                if (!content || !(content as { content: unknown }).content) return [];
 
                 const headings: TocItem[] = [];
-                let index = 0;
 
-                const traverse = (nodes: any[]) => {
+                const traverse = (nodes: unknown[]) => {
                     nodes.forEach((node) => {
-                        if (node.type === 'heading') {
-                            const level = node.attrs?.level || 1;
-                            const text = node.content?.[0]?.text || '';
+                        const nodeObj = node as { type?: string; attrs?: { level?: number }; content?: unknown[] };
+                        if (nodeObj.type === 'heading') {
+                            const level = nodeObj.attrs?.level || 1;
+                            const content = nodeObj.content?.[0] as { text?: string };
+                            const text = content?.text || '';
                             // 제목 텍스트를 기반으로 ID 생성 (공백을 하이픈으로 변경)
                             const id = `heading-${text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
 
@@ -38,13 +39,13 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                         }
 
                         // 재귀적으로 자식 노드들도 탐색
-                        if (node.content && Array.isArray(node.content)) {
-                            traverse(node.content);
+                        if (nodeObj.content && Array.isArray(nodeObj.content)) {
+                            traverse(nodeObj.content);
                         }
                     });
                 };
 
-                traverse(content.content);
+                traverse((content as { content: unknown[] }).content);
                 return headings;
             };
 

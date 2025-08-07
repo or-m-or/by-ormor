@@ -30,7 +30,7 @@ import { TextButtons } from "./selectors/TextButtons";
 import { slashCommand, suggestionItems } from "./SlashCommand";
 
 
-const hljs = require("highlight.js");
+import hljs from "highlight.js";
 
 const extensions = [...defaultExtensions, slashCommand];
 
@@ -47,9 +47,7 @@ interface NovelEditorProps {
 const NovelEditor = ({
     initialContent: propInitialContent,
     onUpdate,
-    placeholder = "내용을 작성하세요...",
     className = "",
-    showToolbar = false,
     showStatus = false,
     editable = true
 }: NovelEditorProps) => {
@@ -99,7 +97,7 @@ const NovelEditor = ({
     const highlightCodeblocks = (content: string) => {
         const doc = new DOMParser().parseFromString(content, "text/html");
         doc.querySelectorAll("pre code").forEach((el) => {
-            // @ts-ignore
+            // @ts-expect-error - highlight.js 타입 정의 문제
             // https://highlightjs.readthedocs.io/en/latest/api.html?highlight=highlightElement#highlightelement
             hljs.highlightElement(el);
         });
@@ -123,9 +121,9 @@ const NovelEditor = ({
             // markdown 저장 시 에러 처리
             try {
                 window.localStorage.setItem("markdown", editor.storage.markdown.getMarkdown());
-            } catch (error) {
-                console.warn("Markdown extension not available");
-            }
+                    } catch {
+            console.warn("Markdown extension not available");
+        }
         }
 
         setSaveStatus("Saved");
@@ -227,10 +225,6 @@ const NovelEditor = ({
 
                     {/* 노션 스타일 Bubble Menu - 텍스트 선택 시에만 나타남 */}
                     <EditorBubble
-                        tippyOptions={{
-                            duration: 100,
-                            placement: "top",
-                        }}
                         className="flex items-center gap-1 p-3 bg-gray-900/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-600/50"
                     >
                         <NodeSelector open={openNode} onOpenChange={setOpenNode} />

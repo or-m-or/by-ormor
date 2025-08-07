@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SigmaIcon } from "lucide-react";
 import { useEditor } from "novel";
+import type { EditorInstance } from "novel";
 import { EditorBubbleItem } from "../bubble/editor-bubble-item";
 
 export const MathSelector = () => {
@@ -12,15 +13,16 @@ export const MathSelector = () => {
     return (
         <EditorBubbleItem
             onSelect={(editor) => {
-                if (editor.isActive("math")) {
-                    editor.chain().focus().unsetLatex().run();
+                const editorInstance = editor as EditorInstance;
+                if (editorInstance.isActive("math")) {
+                    editorInstance.chain().focus().unsetLatex().run();
                 } else {
-                    const { from, to } = editor.state.selection;
-                    const latex = editor.state.doc.textBetween(from, to);
+                    const { from, to } = editorInstance.state.selection;
+                    const latex = editorInstance.state.doc.textBetween(from, to);
 
                     if (!latex) return;
 
-                    editor.chain().focus().setLatex({ latex }).run();
+                    editorInstance.chain().focus().setLatex({ latex }).run();
                 }
             }}
         >

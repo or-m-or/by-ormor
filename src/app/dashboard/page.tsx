@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPosts } from '@/lib/database';
 import { Post } from '@/lib/supabase';
-import { ArrowLeft, Home, LogOut, Settings, FileText, BarChart3, Tag } from 'lucide-react';
+import { Home, LogOut, Settings, FileText, BarChart3, Tag } from 'lucide-react';
 
 export default function DashboardPage() {
     const { user, loading, signOut } = useAuth();

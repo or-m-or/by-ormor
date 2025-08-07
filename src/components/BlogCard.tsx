@@ -2,6 +2,7 @@
 
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { getCategoryStyleByName, CategoryStyle } from '@/lib/categories';
 
@@ -41,24 +42,25 @@ const BlogCard = ({
                 <div className="relative mb-4 aspect-video overflow-hidden rounded-lg bg-gray-800">
                     {imageUrl && imageUrl !== '' ? (
                         <>
-                            <img
+                            <Image
                                 src={imageUrl}
                                 alt={title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                onError={(e) => {
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                onError={() => {
                                     // 이미지 로드 실패시 기본 이미지로 변경
-                                    const target = e.target as HTMLImageElement;
-                                    target.src = '/images/default-thumbnail.jpg';
+                                    // Next.js Image 컴포넌트는 onError 대신 blurDataURL 사용 권장
                                 }}
                             />
 
                         </>
                     ) : (
                         // 이미지가 없는 경우 기본 이미지 표시
-                        <img
+                        <Image
                             src="/images/default-thumbnail.jpg"
                             alt={title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                     )}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>

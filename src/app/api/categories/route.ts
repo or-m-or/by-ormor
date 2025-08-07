@@ -15,7 +15,7 @@ export async function GET() {
         }
 
         return NextResponse.json(data);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: '카테고리 조회 중 오류가 발생했습니다.' }, { status: 500 });
     }
 }
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json(data, { status: 201 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: '카테고리 생성 중 오류가 발생했습니다.' }, { status: 500 });
     }
 }
@@ -66,7 +66,7 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: '카테고리 ID가 필요합니다.' }, { status: 400 });
         }
 
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
         if (name !== undefined) updateData.name = name;
         if (slug !== undefined) updateData.slug = slug;
         if (color !== undefined) updateData.color = color;
@@ -88,7 +88,7 @@ export async function PUT(request: NextRequest) {
         }
 
         return NextResponse.json(data);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: '카테고리 수정 중 오류가 발생했습니다.' }, { status: 500 });
     }
 }
@@ -104,7 +104,7 @@ export async function DELETE(request: NextRequest) {
         }
 
         // 실제 삭제 대신 비활성화
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('categories')
             .update({ is_active: false })
             .eq('id', parseInt(id))
@@ -116,7 +116,7 @@ export async function DELETE(request: NextRequest) {
         }
 
         return NextResponse.json({ message: '카테고리가 비활성화되었습니다.' });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: '카테고리 삭제 중 오류가 발생했습니다.' }, { status: 500 });
     }
 } 

@@ -3,7 +3,6 @@
 import Navigation from '@/components/Navigation';
 import BlogList from '@/components/BlogList';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ShootingStars } from '@/components/common/ShootingStars';
 import { StarsBackground } from '@/components/common/StarsBackground';
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { getPostBySlug, getAllPosts } from '@/lib/database';
 import { Post } from '@/lib/supabase';
 import Navigation from '@/components/Navigation';
@@ -66,12 +67,12 @@ export default function PostPage() {
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-2xl font-bold text-white mb-4">게시물을 찾을 수 없습니다</h1>
                         <p className="text-gray-400 mb-6">{error || '요청하신 게시물이 존재하지 않습니다.'}</p>
-                        <a
+                        <Link
                             href="/"
                             className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
                         >
                             홈으로 돌아가기
-                        </a>
+                        </Link>
                     </div>
                 </main>
             </div>

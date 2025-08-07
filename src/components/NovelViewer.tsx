@@ -3,9 +3,10 @@
 import { EditorContent } from 'novel';
 import { defaultExtensions } from './editor/extensions';
 import { slashCommand } from './editor/SlashCommand';
+import type { JSONContent } from 'novel';
 
 interface NovelViewerProps {
-    content: any;
+    content: JSONContent | null;
     className?: string;
 }
 
@@ -16,7 +17,7 @@ const NovelViewer = ({ content, className = '' }: NovelViewerProps) => {
     return (
         <div className="relative">
             <EditorContent
-                initialContent={content}
+                initialContent={content || undefined}
                 extensions={extensions}
                 editable={false}
                 immediatelyRender={false}

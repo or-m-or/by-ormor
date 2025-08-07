@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SearchInput } from '@/components/search/SearchInput';
 import { SearchResultCard } from '@/components/search/SearchResultCard';
 import { CategoryFilterButton } from '@/components/search/CategoryFilterButton';
@@ -37,7 +37,7 @@ export default function SearchPage() {
     const filtered = posts.filter((post) => {
         const matchesSearch =
             post.title.toLowerCase().includes(query.toLowerCase()) ||
-            post.description.toLowerCase().includes(query.toLowerCase());
+            (post.description?.toLowerCase() || '').includes(query.toLowerCase());
         const matchesCategory = activeCategory === '전체' || post.category?.name === activeCategory;
         return matchesSearch && matchesCategory;
     });
@@ -50,7 +50,7 @@ export default function SearchPage() {
     useEffect(() => { setPage(1); }, [pageSize, query, activeCategory]);
 
     // 카테고리별 게시물 수를 업데이트하는 함수
-    const updateCategoryCounts = async () => {
+    const updateCategoryCounts = useCallback(async () => {
         const counts: Record<string, number> = {};
 
         // 전체 카테고리 수
@@ -62,7 +62,7 @@ export default function SearchPage() {
         }
 
         setCategoryCounts(counts);
-    };
+    }, [categories, query, filtered, posts.length]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -89,7 +89,7 @@ export default function SearchPage() {
         if (categories.length > 0) {
             updateCategoryCounts();
         }
-    }, [categories, query, posts]);
+    }, [categories, query, posts, updateCategoryCounts]);
 
     return (
         <div className="flex flex-col min-h-screen bg-black relative">
@@ -101,7 +101,7 @@ export default function SearchPage() {
 
             {/* 스크롤되는 내용 */}
             <div className="relative z-10 flex flex-col min-h-screen">
-                <Navigation posts={posts} />
+                <Navigation />
 
                 <main className="flex-1 md:ml-28 pb-16 md:pb-0 p-6">
                     <div className="max-w-3xl mx-auto">
@@ -180,7 +180,7 @@ export default function SearchPage() {
                                         <SearchResultCard
                                             id={post.id}
                                             title={post.title}
-                                            summary={post.description}
+                                            summary={post.description || ''}
                                             imageUrl={post.thumbnail}
                                             publishedDate={new Date(post.date).toLocaleDateString('ko-KR', {
                                                 year: 'numeric',

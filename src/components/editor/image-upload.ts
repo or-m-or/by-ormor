@@ -11,7 +11,7 @@ const onUpload = (file: File) => {
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
                 // Supabase Storage에 업로드
-                const { data, error } = await supabase.storage
+                const { error } = await supabase.storage
                     .from('blog-images') // 버킷 이름 변경
                     .upload(fileName, file, {
                         cacheControl: '3600',

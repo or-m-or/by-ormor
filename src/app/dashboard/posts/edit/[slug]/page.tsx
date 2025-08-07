@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import PostForm from '@/components/PostForm';
@@ -27,8 +27,8 @@ export default function EditPostPage() {
     const [initialData, setInitialData] = useState<PostFormData | undefined>();
     const [initialContent, setInitialContent] = useState<JSONContent | null>(null);
 
-    // loadPost를 useEffect 위로 이동
-    const loadPost = async () => {
+    // loadPost를 useCallback으로 감싸서 의존성 문제 해결
+    const loadPost = useCallback(async () => {
         try {
             setLoadingPost(true);
             const post = await getPostBySlug(slug);
@@ -69,13 +69,13 @@ export default function EditPostPage() {
         } finally {
             setLoadingPost(false);
         }
-    };
+    }, [slug, router]);
 
     useEffect(() => {
         if (slug) {
             loadPost();
         }
-    }, [slug]);
+    }, [slug, loadPost]);
 
     const handleSave = async (formData: PostFormData, content: JSONContent | null) => {
         try {

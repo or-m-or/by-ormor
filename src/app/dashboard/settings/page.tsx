@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAllSocialLinks, createSocialLink, updateSocialLink, deleteSocialLink, SocialLink } from '@/lib/database';
-import { Settings, ArrowLeft, Save, Github, Instagram, Mail, Globe, User, Plus, Trash2, X } from 'lucide-react';
+import { Settings, ArrowLeft, Save, Github, Instagram, Mail, Globe, Plus, Trash2, X } from 'lucide-react';
 
 export default function SettingsPage() {
     const { user, loading } = useAuth();

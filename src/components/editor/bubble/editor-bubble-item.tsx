@@ -6,7 +6,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 interface EditorBubbleItemProps {
     readonly children: ReactNode;
     readonly asChild?: boolean;
-    readonly onSelect?: (editor: any) => void;
+    readonly onSelect?: (editor: unknown) => void;
 }
 
 export const EditorBubbleItem = forwardRef<

@@ -5,11 +5,10 @@ import { useEditor } from "novel";
 export interface EditorBubbleProps {
     readonly children: ReactNode;
     readonly className?: string;
-    readonly tippyOptions?: any;
 }
 
 export const EditorBubble = forwardRef<HTMLDivElement, EditorBubbleProps>(
-    ({ children, className, tippyOptions, ...rest }, ref) => {
+    ({ children, className, ...rest }, ref) => {
         const { editor } = useEditor();
         const [isVisible, setIsVisible] = useState(false);
         const [position, setPosition] = useState({ x: 0, y: 0 });
