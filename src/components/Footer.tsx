@@ -76,7 +76,7 @@ export default function Footer() {
 
     return (
         <footer className="bg-gray-800/20 backdrop-blur-sm border-0 mt-20 mx-6 mb-6 rounded-xl shadow-lg">
-            <div className="max-w-6xl mx-auto px-6 py-8">
+            <div className="max-w-6xl mx-auto px-6 py-6">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     {/* 로고 */}
                     <Link href="/" className="font-dunggeunmo flex items-center space-x-2 text-lg font-bold text-white mb-4 md:mb-0 hover:text-purple-400 transition-colors duration-300">
