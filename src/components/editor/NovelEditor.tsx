@@ -94,23 +94,68 @@ const NovelEditor = ({
     // 제목에 고유 ID 추가 (읽기 전용 모드에서만)
     useEffect(() => {
         if (!editable) {
-            const addHeadingIds = () => {
-                const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            const updateHeadingIds = () => {
+                // NovelEditor 컨테이너 내의 제목들만 찾기
+                const editorContainer = document.querySelector('.ProseMirror');
+                if (!editorContainer) return;
+
+                const headings = editorContainer.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
                 headings.forEach((heading, index) => {
-                    if (!heading.id) {
-                        const text = heading.textContent || '';
-                        const baseId = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-                        const id = `heading-${baseId}-${index + 1}`;
-                        heading.id = id;
-                    }
+                    const text = heading.textContent || '';
+                    const baseId = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    const id = `heading-${baseId}-${index + 1}`;
+                    heading.id = id;
                 });
             };
 
             // 초기 실행
-            addHeadingIds();
+            updateHeadingIds();
 
-            // MutationObserver로 DOM 변경 감지
-            const observer = new MutationObserver(addHeadingIds);
+            // MutationObserver로 DOM 변경 감지 (제목 추가/삭제/이동 시)
+            const observer = new MutationObserver((mutations) => {
+                let shouldUpdate = false;
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        // NovelEditor 컨테이너 내의 변경사항만 감지
+                        const editorContainer = document.querySelector('.ProseMirror');
+                        if (!editorContainer) return;
+
+                        // 변경된 노드가 게시물 내용 영역 내에 있는지 확인
+                        const isInEditor = (node: Node): boolean => {
+                            if (node.nodeType === Node.ELEMENT_NODE) {
+                                const element = node as Element;
+                                return editorContainer.contains(element) || element === editorContainer;
+                            }
+                            return false;
+                        };
+
+                        mutation.addedNodes.forEach((node) => {
+                            if (isInEditor(node)) {
+                                const element = node as Element;
+                                if (element.matches('h1, h2, h3, h4, h5, h6') ||
+                                    element.querySelector('h1, h2, h3, h4, h5, h6')) {
+                                    shouldUpdate = true;
+                                }
+                            }
+                        });
+                        mutation.removedNodes.forEach((node) => {
+                            if (isInEditor(node)) {
+                                const element = node as Element;
+                                if (element.matches('h1, h2, h3, h4, h5, h6') ||
+                                    element.querySelector('h1, h2, h3, h4, h5, h6')) {
+                                    shouldUpdate = true;
+                                }
+                            }
+                        });
+                    }
+                });
+
+                if (shouldUpdate) {
+                    updateHeadingIds();
+                }
+            });
+
             observer.observe(document.body, {
                 childList: true,
                 subtree: true
@@ -136,14 +181,14 @@ const NovelEditor = ({
                         const proseMirrorElement = editorElement.querySelector('.ProseMirror');
                         if (proseMirrorElement) {
                             // ProseMirror의 내부 상태에서 JSON 추출
-                            const view = (proseMirrorElement as any).__vue__?.view ||
-                                (proseMirrorElement as any).view;
+                            const view = (proseMirrorElement as unknown as { __vue__?: { view?: unknown } }).__vue__?.view ||
+                                (proseMirrorElement as unknown as { view?: unknown }).view;
 
-                            if (view && view.state) {
+                            if (view && (view as { state?: { doc: { toJSON: () => unknown } } }).state) {
                                 // ProseMirror 상태를 JSON으로 변환
-                                const json = view.state.doc.toJSON();
+                                const json = (view as { state: { doc: { toJSON: () => unknown } } }).state.doc.toJSON();
                                 if (onUpdate) {
-                                    onUpdate(json);
+                                    onUpdate(json as JSONContent);
                                 }
                             }
                         }

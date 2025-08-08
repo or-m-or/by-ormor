@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { createPortal } from 'react-dom';
 
 interface SelectOption {
     id: number;

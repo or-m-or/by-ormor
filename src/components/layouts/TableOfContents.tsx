@@ -19,24 +19,43 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
         if (!content) return;
 
         try {
-            // Novel JSON에서 제목 태그들을 직접 추출
+            // Novel JSON에서 제목들을 추출하고 순차적 ID 부여
             const extractHeadings = (content: unknown): TocItem[] => {
                 if (!content || !(content as { content: unknown }).content) return [];
 
                 const headings: TocItem[] = [];
 
                 const traverse = (nodes: unknown[]) => {
-                    nodes.forEach((node, index) => {
+                    nodes.forEach((node) => {
                         const nodeObj = node as { type?: string; attrs?: { level?: number }; content?: unknown[] };
                         if (nodeObj.type === 'heading') {
                             const level = nodeObj.attrs?.level || 1;
-                            const content = nodeObj.content?.[0] as { text?: string };
-                            const text = content?.text || '';
-                            // 제목 텍스트와 순서를 기반으로 고유한 ID 생성
-                            const baseId = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-                            const id = `heading-${baseId}-${headings.length + 1}-${Date.now()}`;
 
-                            headings.push({ id, text, level });
+                            // 제목 텍스트 추출 로직 개선
+                            let text = '';
+                            if (nodeObj.content && Array.isArray(nodeObj.content)) {
+                                // 모든 텍스트 노드를 순회하며 텍스트 수집
+                                const extractText = (contentNodes: unknown[]): string => {
+                                    return contentNodes.map(contentNode => {
+                                        const contentNodeObj = contentNode as { type?: string; text?: string; content?: unknown[] };
+                                        if (contentNodeObj.type === 'text') {
+                                            return contentNodeObj.text || '';
+                                        } else if (contentNodeObj.content && Array.isArray(contentNodeObj.content)) {
+                                            return extractText(contentNodeObj.content);
+                                        }
+                                        return '';
+                                    }).join('');
+                                };
+                                text = extractText(nodeObj.content);
+                            }
+
+                            if (text.trim()) {
+                                // NovelEditor와 동일한 ID 생성 로직
+                                const baseId = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                                const id = `heading-${baseId}-${headings.length + 1}`;
+
+                                headings.push({ id, text: text.trim(), level });
+                            }
                         }
 
                         // 재귀적으로 자식 노드들도 탐색
@@ -64,6 +83,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
 
     const scrollToHeading = (id: string) => {
         const element = document.getElementById(id);
+
         if (element) {
             // 네비게이션 바와 목차를 고려한 오프셋
             const offset = 100;
@@ -74,6 +94,8 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                 top: offsetPosition,
                 behavior: 'smooth'
             });
+        } else {
+            console.warn(`제목을 찾을 수 없습니다: ${id}`);
         }
     };
 

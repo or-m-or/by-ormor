@@ -197,13 +197,13 @@ export default function PostForm({
                 const proseMirrorElement = editorElement.querySelector('.ProseMirror');
                 if (proseMirrorElement) {
                     // ProseMirror의 내부 상태에서 JSON 추출
-                    const view = (proseMirrorElement as any).__vue__?.view ||
-                        (proseMirrorElement as any).view;
+                    const view = (proseMirrorElement as unknown as { __vue__?: { view?: unknown } }).__vue__?.view ||
+                        (proseMirrorElement as unknown as { view?: unknown }).view;
 
-                    if (view && view.state) {
+                    if (view && (view as { state?: { doc: { toJSON: () => unknown } } }).state) {
                         // ProseMirror 상태를 JSON으로 변환
-                        const latestContent = view.state.doc.toJSON();
-                        await onSave(formData, latestContent);
+                        const latestContent = (view as { state: { doc: { toJSON: () => unknown } } }).state.doc.toJSON();
+                        await onSave(formData, latestContent as JSONContent);
                     } else {
                         await onSave(formData, content);
                     }

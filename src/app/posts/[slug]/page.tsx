@@ -105,17 +105,12 @@ export default function PostPage() {
                             {/* 게시물 내용 */}
                             <article>
                                 {(() => {
-                                    console.log('NovelEditor 렌더링 시작');
-                                    console.log('post.content 타입:', typeof post.content);
-                                    console.log('post.content 값:', post.content);
                                     let parsedContent = null;
                                     try {
                                         parsedContent = typeof post.content === 'string' ? JSON.parse(post.content) : post.content;
-                                        console.log('파싱된 content:', parsedContent);
                                     } catch (error) {
                                         console.error('Content parsing error:', error);
                                     }
-                                    console.log('NovelEditor에 전달할 initialContent:', parsedContent);
                                     return (
                                         <NovelEditor
                                             initialContent={parsedContent}
