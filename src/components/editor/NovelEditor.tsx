@@ -91,6 +91,110 @@ const NovelEditor = ({
         };
     }, []);
 
+    // 제목에 고유 ID 추가 (읽기 전용 모드에서만)
+    useEffect(() => {
+        if (!editable) {
+            const addHeadingIds = () => {
+                const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                headings.forEach((heading, index) => {
+                    if (!heading.id) {
+                        const text = heading.textContent || '';
+                        const baseId = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                        const id = `heading-${baseId}-${index + 1}`;
+                        heading.id = id;
+                    }
+                });
+            };
+
+            // 초기 실행
+            addHeadingIds();
+
+            // MutationObserver로 DOM 변경 감지
+            const observer = new MutationObserver(addHeadingIds);
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            return () => observer.disconnect();
+        }
+    }, [editable]);
+
+    // 이미지 리사이징 감지 및 콘텐츠 업데이트 (편집 모드에서만)
+    useEffect(() => {
+        if (editable) {
+            let resizeTimeout: NodeJS.Timeout;
+
+            const handleImageResize = () => {
+                // 디바운스 처리
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    // 이미지 리사이징 완료 후 에디터 콘텐츠 강제 업데이트
+                    const editorElement = document.querySelector('[data-testid="editor-content"]');
+                    if (editorElement) {
+                        // ProseMirror 에디터 인스턴스 찾기
+                        const proseMirrorElement = editorElement.querySelector('.ProseMirror');
+                        if (proseMirrorElement) {
+                            // ProseMirror의 내부 상태에서 JSON 추출
+                            const view = (proseMirrorElement as any).__vue__?.view ||
+                                (proseMirrorElement as any).view;
+
+                            if (view && view.state) {
+                                // ProseMirror 상태를 JSON으로 변환
+                                const json = view.state.doc.toJSON();
+                                if (onUpdate) {
+                                    onUpdate(json);
+                                }
+                            }
+                        }
+                    }
+                }, 300);
+            };
+
+            // 이미지 리사이징 관련 이벤트 리스너 추가
+            document.addEventListener('mouseup', handleImageResize);
+            document.addEventListener('touchend', handleImageResize);
+
+            return () => {
+                clearTimeout(resizeTimeout);
+                document.removeEventListener('mouseup', handleImageResize);
+                document.removeEventListener('touchend', handleImageResize);
+            };
+        }
+    }, [editable, onUpdate]);
+
+    // 읽기 전용 모드에서 이미지 리사이징 비활성화
+    useEffect(() => {
+        if (!editable) {
+            const disableImageResize = () => {
+                const images = document.querySelectorAll('.ProseMirror img');
+                images.forEach(img => {
+                    // 이미지에 리사이징 관련 스타일 제거
+                    (img as HTMLElement).style.cursor = 'default';
+                    (img as HTMLElement).style.pointerEvents = 'none';
+
+                    // 리사이징 핸들 제거
+                    const resizeHandles = document.querySelectorAll('.image-resizer-handle');
+                    resizeHandles.forEach(handle => {
+                        (handle as HTMLElement).style.display = 'none';
+                    });
+                });
+            };
+
+            // 초기 실행
+            disableImageResize();
+
+            // MutationObserver로 새로운 이미지 추가 시에도 적용
+            const observer = new MutationObserver(disableImageResize);
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            return () => observer.disconnect();
+        }
+    }, [editable]);
+
 
 
     //Apply Codeblock Highlighting on the HTML from editor.getHTML()
@@ -195,7 +299,7 @@ const NovelEditor = ({
                         debouncedUpdates(editor);
                         setSaveStatus("Unsaved");
                     }}
-                    slotAfter={<ImageResizer />}
+                    slotAfter={editable ? <ImageResizer /> : null}
                 >
                     {/* 슬래시 명령어 (편집 모드에서만) */}
                     {editable && (

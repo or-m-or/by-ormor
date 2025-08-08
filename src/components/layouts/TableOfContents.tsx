@@ -26,14 +26,15 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                 const headings: TocItem[] = [];
 
                 const traverse = (nodes: unknown[]) => {
-                    nodes.forEach((node) => {
+                    nodes.forEach((node, index) => {
                         const nodeObj = node as { type?: string; attrs?: { level?: number }; content?: unknown[] };
                         if (nodeObj.type === 'heading') {
                             const level = nodeObj.attrs?.level || 1;
                             const content = nodeObj.content?.[0] as { text?: string };
                             const text = content?.text || '';
-                            // 제목 텍스트를 기반으로 ID 생성 (공백을 하이픈으로 변경)
-                            const id = `heading-${text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
+                            // 제목 텍스트와 순서를 기반으로 고유한 ID 생성
+                            const baseId = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                            const id = `heading-${baseId}-${headings.length + 1}-${Date.now()}`;
 
                             headings.push({ id, text, level });
                         }

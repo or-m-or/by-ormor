@@ -244,7 +244,7 @@ export default function PostsPage() {
                                         { id: 3, name: '20개' },
                                         { id: 4, name: '50개' }
                                     ]}
-                                    value={postsPerPage.toString()}
+                                    value={postsPerPage.toString() + '개'}
                                     onChange={(value) => {
                                         const numValue = parseInt(value.replace('개', ''));
                                         handlePostsPerPageChange(numValue);

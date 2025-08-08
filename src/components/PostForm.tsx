@@ -53,20 +53,6 @@ export default function PostForm({
 
 
 
-    // 초기 데이터 설정
-    useEffect(() => {
-        if (initialData) {
-            setFormData(initialData);
-        }
-    }, [initialData]);
-
-    // 초기 콘텐츠 설정 (별도 useEffect로 분리)
-    useEffect(() => {
-        if (initialContent !== undefined && initialContent !== null) {
-            setContent(initialContent);
-        }
-    }, [initialContent]);
-
     // 카테고리 로드
     useEffect(() => {
         const loadCategories = async () => {
@@ -84,11 +70,27 @@ export default function PostForm({
         loadCategories();
     }, []);
 
+    // 초기 데이터 설정 (카테고리 로드 후)
+    useEffect(() => {
+        if (initialData && categories.length > 0) {
+            setFormData(initialData);
+        }
+    }, [initialData, categories]);
+
+    // 초기 콘텐츠 설정 (별도 useEffect로 분리)
+    useEffect(() => {
+        if (initialContent !== undefined && initialContent !== null) {
+            setContent(initialContent);
+        }
+    }, [initialContent]);
+
 
 
     const handleInputChange = (key: string, value: string) => {
+        console.log('handleInputChange 호출:', key, value);
         if (key === 'category') {
             const selectedCategory = categories.find(cat => cat.name === value);
+            console.log('선택된 카테고리:', selectedCategory);
             setFormData(prev => ({
                 ...prev,
                 category: value,
@@ -188,7 +190,29 @@ export default function PostForm({
 
         try {
             setSaving(true);
-            await onSave(formData, content);
+
+            // 저장 전에 에디터의 최신 콘텐츠를 강제로 가져오기
+            const editorElement = document.querySelector('[data-testid="editor-content"]');
+            if (editorElement) {
+                const proseMirrorElement = editorElement.querySelector('.ProseMirror');
+                if (proseMirrorElement) {
+                    // ProseMirror의 내부 상태에서 JSON 추출
+                    const view = (proseMirrorElement as any).__vue__?.view ||
+                        (proseMirrorElement as any).view;
+
+                    if (view && view.state) {
+                        // ProseMirror 상태를 JSON으로 변환
+                        const latestContent = view.state.doc.toJSON();
+                        await onSave(formData, latestContent);
+                    } else {
+                        await onSave(formData, content);
+                    }
+                } else {
+                    await onSave(formData, content);
+                }
+            } else {
+                await onSave(formData, content);
+            }
         } catch (error) {
             console.error('저장 중 오류:', error);
             alert('저장 중 오류가 발생했습니다.');

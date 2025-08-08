@@ -55,6 +55,9 @@ export default function Select({
     }, [isOpen]);
 
     const handleSelect = (optionName: string) => {
+        console.log('Select handleSelect 호출:', optionName);
+        console.log('현재 value:', value);
+        console.log('선택된 option.name:', optionName);
         onChange(optionName);
         setIsOpen(false);
     };
@@ -64,7 +67,12 @@ export default function Select({
             <button
                 ref={buttonRef}
                 type="button"
-                onClick={() => !disabled && setIsOpen(!isOpen)}
+                onClick={() => {
+                    console.log('Select 버튼 클릭됨, 현재 isOpen:', isOpen);
+                    if (!disabled) {
+                        setIsOpen(!isOpen);
+                    }
+                }}
                 disabled={disabled}
                 className="w-full px-3 py-2 bg-gray-800/50 border-0 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-between disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -76,43 +84,38 @@ export default function Select({
                 />
             </button>
 
-            {isOpen && buttonRef.current && createPortal(
+            {isOpen && (
                 <div
-                    className="fixed bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl z-50"
-                    style={{
-                        top: buttonRef.current.getBoundingClientRect().bottom + 8,
-                        left: buttonRef.current.getBoundingClientRect().left,
-                        width: buttonRef.current.offsetWidth,
-                        maxHeight: '200px'
-                    }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl z-[9999] max-h-48 overflow-y-auto"
                 >
-                    <ScrollArea className="h-48">
-                        <div className="p-2">
-                            {loading ? (
-                                <div className="px-3 py-2 text-gray-400 text-sm">로딩 중...</div>
-                            ) : options.length === 0 ? (
-                                <div className="px-3 py-2 text-gray-400 text-sm">옵션이 없습니다.</div>
-                            ) : (
-                                options.map(option => (
-                                    <button
-                                        key={option.id}
-                                        type="button"
-                                        onClick={() => handleSelect(option.name)}
-                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 ${value === option.name
-                                            ? 'bg-gray-600/50 text-white shadow-sm'
-                                            : `text-white hover:bg-gray-700/50 hover:text-white`
-                                            }`}
-                                    >
-                                        <span className={option.color || 'text-white'}>
-                                            {option.name}
-                                        </span>
-                                    </button>
-                                ))
-                            )}
-                        </div>
-                    </ScrollArea>
-                </div>,
-                document.body
+                    <div className="p-2">
+                        {loading ? (
+                            <div className="px-3 py-2 text-gray-400 text-sm">로딩 중...</div>
+                        ) : options.length === 0 ? (
+                            <div className="px-3 py-2 text-gray-400 text-sm">옵션이 없습니다.</div>
+                        ) : (
+                            options.map(option => (
+                                <button
+                                    key={option.id}
+                                    type="button"
+                                    onClick={() => {
+                                        console.log('버튼 클릭됨:', option.name);
+                                        handleSelect(option.name);
+                                    }}
+                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 cursor-pointer ${value === option.name || value === option.name.replace('개', '') || value === option.name + '개'
+                                        ? 'bg-gray-600/50 text-white shadow-sm'
+                                        : `text-white hover:bg-gray-700/50 hover:text-white`
+                                        }`}
+                                    style={{ pointerEvents: 'auto' }}
+                                >
+                                    <span className={option.color || 'text-white'}>
+                                        {option.name}
+                                    </span>
+                                </button>
+                            ))
+                        )}
+                    </div>
+                </div>
             )}
         </div>
     );
